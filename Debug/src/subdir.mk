@@ -6,6 +6,8 @@
 CPP_SRCS += \
 ../src/Map.cpp \
 ../src/Particle.cpp \
+../src/Position.cpp \
+../src/Properties.cpp \
 ../src/Robot.cpp \
 ../src/State.cpp \
 ../src/main.cpp 
@@ -13,6 +15,8 @@ CPP_SRCS += \
 OBJS += \
 ./src/Map.o \
 ./src/Particle.o \
+./src/Position.o \
+./src/Properties.o \
 ./src/Robot.o \
 ./src/State.o \
 ./src/main.o 
@@ -20,6 +24,8 @@ OBJS += \
 CPP_DEPS += \
 ./src/Map.d \
 ./src/Particle.d \
+./src/Position.d \
+./src/Properties.d \
 ./src/Robot.d \
 ./src/State.d \
 ./src/main.d 
