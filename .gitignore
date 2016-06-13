@@ -17,11 +17,12 @@ coverage
 .grunt
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
+Debug/SLAM
 
 # Object files
 *.o
 *.obj
+*.d
 
 # Users Environment Variables
 .lock-wscript
