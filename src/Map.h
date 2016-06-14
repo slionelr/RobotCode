@@ -5,25 +5,28 @@
  *      Author: user
  */
 
-#include <iostream>
-
 #ifndef MAP_H_
 #define MAP_H_
 
+#include <iostream>
 #include "MapUtils/GridAsInt.h"
-
-#define ROBO_SIZE_H 30
-#define ROBO_SIZE_W 30
-#define REZOLUTION	2.5
+#include "Position.h"
 
 class Map {
 private:
 	GridAsInt _grid;
+	double _resolution;
 public:
-	Map(std::string mapPath);
-	GridAsInt Nipuha(int size);
+	Map(unsigned height, unsigned width, double resolution);
+	Map(GridAsInt grid, double resolution);
+	Map Nipuha(int size);
 	GridAsInt GetGrid();
+	double GetResolution();
+	Map Clone();
+	void Print();
 	virtual ~Map();
+	static Map FromFile(std::string filepath, double resolution);
+	static Position GetLocation(Position p, Map from, Map to);
 };
 
 #endif /* MAP_H_ */
