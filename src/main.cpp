@@ -8,33 +8,34 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 
 #include "ConfigurationManager.h"
 #include "Robot.h"
 #include "Map.h"
 #include "Particle.h"
 
-using namespace std;
-
 int main() {
-	vector<Particle> vp;
+	std::vector<Particle> vp;
 
-	ConfigurationManager p("/home/user/workspace/SLAM/parameters.txt");
+	ConfigurationManager cnf("parameters.txt");
 
-	Robot robot("localhost", 6665);
-	robot.MoveTo(0.2, 0);
+//	Robot robot("localhost", 6665);
+//	robot.MoveTo(0.2, 0);
 
-	std::string f = p.GetMap();
-	double d = p.GetMapResolCM();
+	Map map = Map(cnf.GetMap(), cnf.GetMapResolCM());
+	Map grid = map.MapGridConverter(cnf.GetGridResolCM());
 
-	Map map = Map::FromFile(f, d);
-	Map nipuah = map.Nipuha(5);
+	grid.SaveToFile("zprint.png");
+	grid.Print();
+
+//	Map nipuah = map.Nipuha(5);
 
 	// Rand particales
 
-	while (true) {
-		robot.Read();
-	}
+//	while (true) {
+//		robot.Read();
+//	}
 
 	return 0;
 }
