@@ -9,18 +9,18 @@
 #define MAP_H_
 
 #include <iostream>
-#include "MapUtils/GridAsInt.h"
+#include "MapUtils/Grid.h"
 #include "Position.h"
 
 class Map {
 private:
-	GridAsInt _grid;
+	Grid _grid;
 	double _resolution;
 public:
 	Map(std::string file, double resolution);
-	Map(GridAsInt grid, double resolution);
+	Map(Grid grid, double resolution);
 	Map Nipuha(int size);
-	GridAsInt GetGrid();
+	Grid GetGrid();
 	double GetResolution();
 	Map MapGridConverter(double gridResolution);
 	Position MapToGridLocation(Position p, Map grid);

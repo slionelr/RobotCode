@@ -5,19 +5,16 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/MapUtils/Grid.cpp \
-../src/MapUtils/GridAsInt.cpp \
 ../src/MapUtils/lodepng.cpp \
 ../src/MapUtils/pngUtil.cpp 
 
 OBJS += \
 ./src/MapUtils/Grid.o \
-./src/MapUtils/GridAsInt.o \
 ./src/MapUtils/lodepng.o \
 ./src/MapUtils/pngUtil.o 
 
 CPP_DEPS += \
 ./src/MapUtils/Grid.d \
-./src/MapUtils/GridAsInt.d \
 ./src/MapUtils/lodepng.d \
 ./src/MapUtils/pngUtil.d 
 

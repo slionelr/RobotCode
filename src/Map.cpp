@@ -10,8 +10,8 @@
 #include "Map.h"
 #include "MapUtils/lodepng.h"
 
-PixelAsInt WHITE;
-PixelAsInt BLACK;
+#define WHITE 0
+#define BLACK 1
 
 Map::Map(std::string file, double resolution) {
 	std::vector<unsigned char> image;
@@ -19,9 +19,6 @@ Map::Map(std::string file, double resolution) {
 	unsigned x, y;
 
 	_resolution = resolution;
-
-	WHITE = PixelAsInt(0);
-	BLACK = PixelAsInt(1);
 
 	//Decode the image
 	unsigned error = lodepng::decode(image, width, height, file);
@@ -31,7 +28,7 @@ Map::Map(std::string file, double resolution) {
 		std::cout << "encoder error " << error << ": "
 				<< lodepng_error_text(error) << std::endl;
 
-	_grid = GridAsInt(height, width);
+	_grid = Grid(height, width);
 	// Set grid
 	for (y=0; y < height; y++) {
 		for (x=0; x < width; x++) {
@@ -56,7 +53,7 @@ Map::Map(std::string file, double resolution) {
 	}
 }
 
-Map::Map(GridAsInt grid, double resolution) {
+Map::Map(Grid grid, double resolution) {
 	_grid = grid;
 	_resolution = resolution;
 }
@@ -69,12 +66,12 @@ Map Map::Nipuha(signed rSize) {
 	std::cout << "nipuah of: " << rSize << std::endl;
 
 	// Clone the grid and napeah oto
-	GridAsInt nipuha = _grid.Clone();
+	Grid nipuha = _grid.Clone();
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
-			PixelAsInt p = _grid.GetValue(y, x);
+			int p = _grid.GetValue(y, x);
 			// If its white than
-			if (p.Value) // Is not zero - like white-RGB=255 in png
+			if (p) // Is not zero - like white-RGB=255 in png
 			{
 				nipuha.SetValue(y, x, WHITE);
 			}
@@ -96,7 +93,7 @@ Map Map::Nipuha(signed rSize) {
 	return Map::Map(nipuha, _resolution);
 }
 
-GridAsInt Map::GetGrid() {
+Grid Map::GetGrid() {
 	return _grid;
 }
 
@@ -117,7 +114,7 @@ Map Map::Clone() {
 }
 
 void Map::Print() {
-	PixelAsInt p;
+	int p;
 	unsigned height = _grid.GetHeight();
 	unsigned width = _grid.GetWidth();
 
@@ -126,7 +123,7 @@ void Map::Print() {
 		for(unsigned x=0; x < width; x++) {
 			p = _grid.GetValue(y,x);
 
-			if(p.Value == 0) {
+			if(p == 0) {
 				std::cout << ".";
 			} else {
 				std::cout << "O"; //obstacle
@@ -144,19 +141,19 @@ Map Map::MapGridConverter(double gridResolution) {
 	unsigned nh = ceil((double)height / (double)matrixSize);
 	unsigned nw = ceil((double)width / (double)matrixSize);
 
-	GridAsInt n(nh, nw);
+	Grid n(nh, nw);
 	for (unsigned y=0; y < height; y+=matrixSize) {
 		for (unsigned x=0; x < width; x+=matrixSize) {
 			int obstacle = 0;
 			for (unsigned my=0; my < matrixSize; my++) {
 				for (unsigned mx=0; mx < matrixSize; mx++) {
 					if (y+my < height && x+mx < width) {
-						int v = _grid.GetValue(y+my,x+mx).Value;
+						int v = _grid.GetValue(y+my,x+mx);
 						obstacle = obstacle | v;
 					}
 				}
 			}
-			n.SetValue(y / matrixSize, x / matrixSize, PixelAsInt(obstacle));
+			n.SetValue(y / matrixSize, x / matrixSize, obstacle);
 		}
 	}
 
@@ -180,7 +177,7 @@ void Map::SaveToFile(std::string file) {
 
 	for (y=0; y < height; y++) {
 		for (x=0; x < width; x++) {
-			if (_grid.GetValue(y, x).Value == 0) {
+			if (_grid.GetValue(y, x) == 0) {
 				image[y * width * 4 + x * 4 + 0] = 255;
 				image[y * width * 4 + x * 4 + 1] = 255;
 				image[y * width * 4 + x * 4 + 2] = 255;
@@ -193,8 +190,6 @@ void Map::SaveToFile(std::string file) {
 			}
 		}
 	}
-
-//	for (x=0; x )
 
 	//Encode the image
 	unsigned error = lodepng::encode(file, image, width, height);
