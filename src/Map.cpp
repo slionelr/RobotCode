@@ -113,20 +113,25 @@ Map Map::Clone() {
 	return Map::Map(_grid.Clone(), _resolution);
 }
 
-void Map::Print() {
-	int p;
-	unsigned height = _grid.GetHeight();
-	unsigned width = _grid.GetWidth();
+void Map::Print(Position p) {
+	int value;
+	signed height = _grid.GetHeight();
+	signed width = _grid.GetWidth();
 
-	for(unsigned y=0; y < height; y++)
+	for(signed y=0; y < height; y++)
 	{
-		for(unsigned x=0; x < width; x++) {
-			p = _grid.GetValue(y,x);
+		for(signed x=0; x < width; x++) {
+			value = _grid.GetValue(y,x);
 
-			if(p == 0) {
-				std::cout << ".";
+			if ((p.x != 0 && p.y != 0) &&
+				(p.x == x && p.y == y)) {
+				std::cout << "X";
 			} else {
-				std::cout << "O"; //obstacle
+				if(value == 0) {
+					std::cout << ".";
+				} else {
+					std::cout << "O"; //obstacle
+				}
 			}
 		}
 		std::cout << std::endl;
@@ -163,30 +168,42 @@ Map Map::MapGridConverter(double gridResolution) {
 Position Map::MapToGridLocation(Position p, Map grid) {
 	int convFactor = grid.GetResolution() / this->GetResolution();
 	return Position(
-			floor(p._x / convFactor),
-			floor(p._y / convFactor)
+			floor(p.x / convFactor),
+			floor(p.y / convFactor)
 			);
 }
 
 void Map::SaveToFile(std::string file) {
+	SaveToFile(file, Position());
+}
+
+void Map::SaveToFile(std::string file, Position p) {
 	// Convert map to image vector
-	unsigned height = this->GetHeight();
-	unsigned width = this->GetWidth();
+	signed height = this->GetHeight();
+	signed width = this->GetWidth();
 	std::vector<unsigned char> image(height * width * 4);
-	unsigned x,y;
+	signed x,y;
 
 	for (y=0; y < height; y++) {
 		for (x=0; x < width; x++) {
-			if (_grid.GetValue(y, x) == 0) {
+			if ((p.x != 0 && p.y != 0) &&
+				(p.x == x && p.y == y)) {
 				image[y * width * 4 + x * 4 + 0] = 255;
-				image[y * width * 4 + x * 4 + 1] = 255;
-				image[y * width * 4 + x * 4 + 2] = 255;
+				image[y * width * 4 + x * 4 + 1] = 0;
+				image[y * width * 4 + x * 4 + 2] = 0;
 				image[y * width * 4 + x * 4 + 3] = 255;
 			} else {
-				image[y * width * 4 + x * 4 + 0] = 0;
-				image[y * width * 4 + x * 4 + 0] = 0;
-				image[y * width * 4 + x * 4 + 0] = 0;
-				image[y * width * 4 + x * 4 + 3] = 255;
+				if (_grid.GetValue(y, x) == 0) {
+					image[y * width * 4 + x * 4 + 0] = 255;
+					image[y * width * 4 + x * 4 + 1] = 255;
+					image[y * width * 4 + x * 4 + 2] = 255;
+					image[y * width * 4 + x * 4 + 3] = 255;
+				} else {
+					image[y * width * 4 + x * 4 + 0] = 0;
+					image[y * width * 4 + x * 4 + 0] = 0;
+					image[y * width * 4 + x * 4 + 0] = 0;
+					image[y * width * 4 + x * 4 + 3] = 255;
+				}
 			}
 		}
 	}

@@ -21,13 +21,14 @@ int main() {
 	ConfigurationManager cnf("parameters.txt");
 
 //	Robot robot("localhost", 6665);
-//	robot.MoveTo(0.2, 0);
+//	robot.SetSpeed(0.2, 0);
 
 	Map map = Map(cnf.GetMap(), cnf.GetMapResolCM());
 	Map grid = map.MapGridConverter(cnf.GetGridResolCM());
 
-	grid.SaveToFile("zprint.png");
-	grid.Print();
+//	Position p = Position(5,5);
+//	map.SaveToFile("zprint.png", p);
+//	map.Print(p);
 
 //	Map nipuah = map.Nipuha(5);
 

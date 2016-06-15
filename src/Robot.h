@@ -11,18 +11,18 @@
 #include <iostream>
 #include <libplayerc++/playerc++.h>
 
-#include "State.h"
+#include "Position.h"
 
 class Robot {
 private:
 	PlayerCc::PlayerClient* pc;
 	PlayerCc::Position2dProxy* pp;
 	PlayerCc::LaserProxy* lp;
-	State* sCurr;
+	Position position;
 public:
 	Robot(const std::string ip, int port);
 	void Read();
-	void MoveTo(double speed, double yaw);
+	void SetSpeed(double speed, double yaw);
 	virtual ~Robot();
 };
 

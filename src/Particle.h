@@ -9,20 +9,19 @@
 #define PARTICLE_H_
 
 #include <libplayerc++/playerc++.h>
+#include "Map.h"
 
 #define NORMAL 1
 
 class Particle {
 private:
-	double x;
-	double y;
-	double o;
 	double belif;
-public:
-	Particle(double x, double y, double o);
-	void Update(PlayerCc::LaserProxy* arrLaser, int laserNum, double dx, double dy, double dO, void* map);
 	double ProbByMov(double dx, double dy, double dO);
-	double ProbByLaser(PlayerCc::LaserProxy* arrLaser, int laserNum, void* map);
+	double ProbByLaser(double* arrLaser, int laserLen, Map map);
+public:
+	Position position;
+	Particle(double x, double y, double o);
+	void Update(double* arrLaser, int laserLen, double dx, double dy, double dO, Map map);
 	virtual ~Particle();
 };
 

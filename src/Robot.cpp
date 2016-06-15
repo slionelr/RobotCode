@@ -8,39 +8,39 @@
 #include "Robot.h"
 
 Robot::Robot(const std::string ip, int port) {
-	sCurr = new State();
+	position = Position();
 	pc = new PlayerCc::PlayerClient(ip, port);
 	pp = new PlayerCc::Position2dProxy(pc, 0);
 	lp = new PlayerCc::LaserProxy(pc, 0);
 }
 
 void Robot::Read() {
-	State* sOld = sCurr->Clone();
+	Position pOld = position.Clone();
 	double dx, dy;
 
 	pc->Read();
 
 	// Set current position
-	sCurr->x = pp->GetXPos();
-	sCurr->y = pp->GetYPos();
-	sCurr->o = pp->GetYaw();
+	position.x = pp->GetXPos();
+	position.y = pp->GetYPos();
+	position.o = pp->GetYaw();
+
+	double d = lp->GetRange(333);
+	std::cout << d << std::endl;
 
 	// Calculate deltas
-	dx = sCurr->x - sOld->x;
-	dy = sCurr->y - sOld->y;
+	dx = position.x - pOld.x;
+	dy = position.y - pOld.y;
 	// Do we need DeltaYaw?
-
-	delete sOld;
 }
 
-void Robot::MoveTo(double speed, double yaw) {
+void Robot::SetSpeed(double speed, double yaw) {
 	pp->SetSpeed(speed, yaw);
 }
 
 Robot::~Robot() {
 	// TODO: Disconnect
-	delete sCurr;
-	delete pc;
-	delete pp;
-	delete lp;
+//	delete pc;
+//	delete pp;
+//	delete lp;
 }

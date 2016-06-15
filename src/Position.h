@@ -8,16 +8,18 @@
 #ifndef POSITION_H_
 #define POSITION_H_
 
+
 class Position {
 private:
 	void init(signed x, signed y, signed o);
 public:
-	signed _x;
-	signed _y;
-	signed _o;
+	signed x;
+	signed y;
+	signed o;
 	Position();
 	Position(signed x, signed y);
 	Position(signed x, signed y, signed o);
+	Position Clone();
 	virtual ~Position();
 	void Print();
 };

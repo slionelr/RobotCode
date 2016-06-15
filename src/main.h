@@ -5,10 +5,9 @@
  *      Author: user
  */
 
-#include <libplayerc++/playerc++.h>
-
 #ifndef SLAM_H_
 #define SLAM_H_
 
+#include <libplayerc++/playerc++.h>
 
 #endif /* SLAM_H_ */

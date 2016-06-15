@@ -5,29 +5,29 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/ConfigurationManager.cpp \
+../src/LocalizationManager.cpp \
 ../src/Map.cpp \
 ../src/Particle.cpp \
 ../src/Position.cpp \
 ../src/Robot.cpp \
-../src/State.cpp \
 ../src/main.cpp 
 
 OBJS += \
 ./src/ConfigurationManager.o \
+./src/LocalizationManager.o \
 ./src/Map.o \
 ./src/Particle.o \
 ./src/Position.o \
 ./src/Robot.o \
-./src/State.o \
 ./src/main.o 
 
 CPP_DEPS += \
 ./src/ConfigurationManager.d \
+./src/LocalizationManager.d \
 ./src/Map.d \
 ./src/Particle.d \
 ./src/Position.d \
 ./src/Robot.d \
-./src/State.d \
 ./src/main.d 
 
 

@@ -27,8 +27,9 @@ public:
 	unsigned GetHeight();
 	unsigned GetWidth();
 	Map Clone();
-	void Print();
+	void Print(Position p);
 	void SaveToFile(std::string file);
+	void SaveToFile(std::string file, Position p);
 	virtual ~Map();
 };
 

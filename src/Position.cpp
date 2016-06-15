@@ -9,9 +9,9 @@
 #include "Position.h"
 
 void Position::init(signed x, signed y, signed o) {
-	_x = x;
-	_y = y;
-	_o = o;
+	this->x = x;
+	this->y = y;
+	this->o = o;
 }
 
 Position::Position() {
@@ -26,10 +26,15 @@ Position::Position(signed x, signed y, signed o) {
 	init(x,y,o);
 }
 
+Position Position::Clone() {
+	return Position(this->x, this->y, this->o);
+}
+
+void Position::Print() {
+	std::cout << "[X: " << this->x << " ][Y: " << this->y << "]" << std::endl;
+}
+
 Position::~Position() {
 	// TODO Auto-generated destructor stub
 }
 
-void Position::Print() {
-	std::cout << "[X: " << _x << " ][Y: " << _y << "]" << std::endl;
-}
