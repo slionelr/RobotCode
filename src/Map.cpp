@@ -13,6 +13,9 @@
 #define WHITE 0
 #define BLACK 1
 
+#define DOT_RADIUS		2
+#define DIRECTION_LIMIT	10
+
 Map::Map(std::string file, double resolution) {
 	std::vector<unsigned char> image;
 	unsigned height, width;
@@ -174,10 +177,10 @@ Position Map::MapToGridLocation(Position p, Map grid) {
 }
 
 void Map::SaveToFile(std::string file) {
-	SaveToFile(file, Position());
+	SaveToFile(file, NULL, 0);
 }
 
-void Map::SaveToFile(std::string file, Position p) {
+void Map::SaveToFile(std::string file, Position* parti, int partiLen) {
 	// Convert map to image vector
 	signed height = this->GetHeight();
 	signed width = this->GetWidth();
@@ -222,7 +225,6 @@ void Map::SaveToFile(std::string file, Position p) {
 	// |
 	// V
 	//(Y)
-	int lim = 10;
 	double tx = 0;
 	double ty = 0;
 	double addX = sin(p.o);
@@ -230,7 +232,7 @@ void Map::SaveToFile(std::string file, Position p) {
 	int nx = 0;
 	int ny = 0;
 
-	while ((abs(nx) < lim) && (abs(ny) < lim)) {
+	while ((abs(nx) < DIRECTION_LIMIT) && (abs(ny) < DIRECTION_LIMIT)) {
 		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 0] = 255;
 		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 1] = 0;
 		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 2] = 0;

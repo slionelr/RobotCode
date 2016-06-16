@@ -36,12 +36,9 @@ int main() {
 //	int i = 1;
 //	while (true) {
 //		robot.Read();
-////		Position p = robot.GetPosition();
-//
-////		std::cout << "[Yaw: " << p.o << "]" << std::endl;
-////		double px = sin(p.o) * 10;
-////		double py = cos(p.o) * 10;
-////		std::cout << "[PX: " << px << " ][PY: " << py << "]" << std::endl;
+//		Position p = robot.GetPosition();
+//		p.Print();
+//		map.SaveToFile("zprint.png", p);
 //
 //		std::cout << "Loop " << i << std::endl;
 //		i++;

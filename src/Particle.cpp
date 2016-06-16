@@ -31,21 +31,21 @@ void Particle::Update(double* arrLaser, int laserLen, double dx, double dy, doub
 }
 
 double Particle::ProbByMov(double dx, double dy, double dO) {
+	double probO = 1.0;
+
 	double d = pow(dx, 2) + pow(dy, 2);
 	d = sqrt(d);
 
 	// TODO: Return the probability to get to the destination
-	if (d < 0.2 && dO < 2) {
-		return 1;
-	} else if (true){
-		return 0.0;
-	} else {
-		return 0.0;
+	if (dO != 0) {
+		probO = M_PI / abs(dO) / 10;
 	}
+
+	return probO * (d / 10);
 }
 
 double Particle::ProbByLaser(double* arrLaser, int laserLen, Map map) {
-	return 0.0;
+	return 1.0;
 }
 
 Particle::~Particle() {

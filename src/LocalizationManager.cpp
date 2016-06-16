@@ -5,6 +5,7 @@
  *      Author: user
  */
 
+#include <stdlib.h>
 #include "LocalizationManager.h"
 
 LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map) {
@@ -13,6 +14,13 @@ LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int las
 	_lasersLen = lasersLen;
 	_lasersData = (double*)malloc(lasersLen * sizeof(double));
 	_map = map;
+
+	for (int i=0; i < 15; i++) {
+		Particle pr = Particle(rand() % map.GetWidth(),
+							   rand() % map.GetHeight(),
+							   rand() % (unsigned)M_PI);
+		_particles.push_back(pr);
+	}
 }
 
 void LocalizationManager::Update(double dx, double dy, double dO) {

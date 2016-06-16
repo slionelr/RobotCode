@@ -13,12 +13,11 @@
 #include "MapUtils/Grid.h"
 #include "Position.h"
 
-#define DOT_RADIUS 2
-
 class Map {
 private:
 	Grid _grid;
 	double _resolution;
+	void AddDirctionsToImage(unsigned char* image, Position* p);
 public:
 	Map() {}
 	Map(std::string file, double resolution);
@@ -33,7 +32,7 @@ public:
 	Map Clone();
 	void Print(Position p);
 	void SaveToFile(std::string file);
-	void SaveToFile(std::string file, Position p);
+	void SaveToFile(std::string file, Position* parti, int partiLen);
 	virtual ~Map();
 };
 
