@@ -38,6 +38,14 @@ Map LocalizationManager::GetMap() {
 	return this->_map;
 }
 
+void LocalizationManager::PaticlesImage() {
+	std::vector<Position> v;
+	for (int i=0; i < _particles.size(); i++) {
+		v.push_back(_particles[i].position);
+	}
+	_map.SaveToFile("particles.png", &v[0], _particles.size());
+}
+
 LocalizationManager::~LocalizationManager() {
 	// TODO Auto-generated destructor stub
 }

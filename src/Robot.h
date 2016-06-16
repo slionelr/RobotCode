@@ -28,6 +28,7 @@ public:
 	void Read();
 	void SetSpeed(double speed, double yaw);
 	Position GetPosition();
+	void SaveParticles();
 	virtual ~Robot();
 };
 

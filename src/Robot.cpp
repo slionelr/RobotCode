@@ -50,6 +50,10 @@ Position Robot::GetPosition() {
 			);
 }
 
+void Robot::SaveParticles() {
+	_mngLocation.PaticlesImage();
+}
+
 Robot::~Robot() {
 	// TODO: Disconnect
 //	delete pc;

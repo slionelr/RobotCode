@@ -17,7 +17,7 @@ class Map {
 private:
 	Grid _grid;
 	double _resolution;
-	void AddDirctionsToImage(unsigned char* image, Position* p);
+	void AddDirctionsToImage(unsigned char* image, Position* parti, int partiLen);
 public:
 	Map() {}
 	Map(std::string file, double resolution);

@@ -203,47 +203,7 @@ void Map::SaveToFile(std::string file, Position* parti, int partiLen) {
 		}
 	}
 
-	if (p.x != 0 && p.y != 0) {
-		for (y=0-DOT_RADIUS; y < DOT_RADIUS; y++) {
-			for (x=0-DOT_RADIUS; x < DOT_RADIUS; x++) {
-				image[(p.y + y) * width * 4 + (p.x + x) * 4 + 0] = 255;
-				image[(p.y + y) * width * 4 + (p.x + x) * 4 + 1] = 0;
-				image[(p.y + y) * width * 4 + (p.x + x) * 4 + 2] = 0;
-				image[(p.y + y) * width * 4 + (p.x + x) * 4 + 3] = 255;
-			}
-		}
-	}
-
-	// TODO: Sync me, Sagiv and Ariel how the Yaw is relativ to. (the XY gaph or somthing ele.
-	// I say that the Yaw is like the Y direction.
-	//
-	//	------------>(X)
-	// |
-	// |    ^    == Yaw = -1 (because the direction is the oposite direction to the Y
-	// |    |
-	// |
-	// |
-	// V
-	//(Y)
-	double tx = 0;
-	double ty = 0;
-	double addX = sin(p.o);
-	double addY = cos(p.o);
-	int nx = 0;
-	int ny = 0;
-
-	while ((abs(nx) < DIRECTION_LIMIT) && (abs(ny) < DIRECTION_LIMIT)) {
-		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 0] = 255;
-		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 1] = 0;
-		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 2] = 0;
-		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 3] = 255;
-
-		tx+=addX;
-		ty+=addY;
-
-		nx = tx;
-		ny = ty;
-	}
+	AddDirctionsToImage(&image[0], parti, partiLen);
 
 	//Encode the image
 	unsigned error = lodepng::encode(file, image, width, height);
@@ -252,6 +212,55 @@ void Map::SaveToFile(std::string file, Position* parti, int partiLen) {
 	if (error)
 		std::cout << "encoder error " << error << ": "
 				<< lodepng_error_text(error) << std::endl;
+}
+
+void Map::AddDirctionsToImage(unsigned char* image, Position* parti, int partiLen) {
+	unsigned width = this->GetWidth();
+
+	for (int i=0; i < partiLen; i++) {
+		Position p = parti[i];
+		if (p.x != 0 && p.y != 0) {
+			for (int y=0-DOT_RADIUS; y < DOT_RADIUS; y++) {
+				for (int x=0-DOT_RADIUS; x < DOT_RADIUS; x++) {
+					image[((int)p.y + y) * width * 4 + ((int)p.x + x) * 4 + 0] = 255;
+					image[((int)p.y + y) * width * 4 + ((int)p.x + x) * 4 + 1] = 0;
+					image[((int)p.y + y) * width * 4 + ((int)p.x + x) * 4 + 2] = 0;
+					image[((int)p.y + y) * width * 4 + ((int)p.x + x) * 4 + 3] = 255;
+				}
+			}
+		}
+
+		// TODO: Sync me, Sagiv and Ariel how the Yaw is relativ to. (the XY gaph or somthing ele.
+		// I say that the Yaw is like the Y direction.
+		//
+		//	------------>(X)
+		// |
+		// |    ^    == Yaw = -1 (because the direction is the oposite direction to the Y
+		// |    |
+		// |
+		// |
+		// V
+		//(Y)
+		double tx = 0;
+		double ty = 0;
+		double addX = sin(p.o);
+		double addY = cos(p.o);
+		int nx = 0;
+		int ny = 0;
+
+		while ((abs(nx) < DIRECTION_LIMIT) && (abs(ny) < DIRECTION_LIMIT)) {
+			image[(int)(p.y + ny) * width * 4 + (int)(p.x + nx) * 4 + 0] = 255;
+			image[(int)(p.y + ny) * width * 4 + (int)(p.x + nx) * 4 + 1] = 0;
+			image[(int)(p.y + ny) * width * 4 + (int)(p.x + nx) * 4 + 2] = 0;
+			image[(int)(p.y + ny) * width * 4 + (int)(p.x + nx) * 4 + 3] = 255;
+
+			tx+=addX;
+			ty+=addY;
+
+			nx = tx;
+			ny = ty;
+		}
+	}
 }
 
 Map::~Map() {

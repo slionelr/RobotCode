@@ -23,6 +23,7 @@ public:
 	LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map);
 	void Update(double dx, double dy, double dO);
 	Map GetMap();
+	void PaticlesImage();
 	virtual ~LocalizationManager();
 };
 

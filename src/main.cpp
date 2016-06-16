@@ -27,9 +27,16 @@ int main() {
 	Robot robot("localhost", 6665, nipuha);
 	robot.SetSpeed(0.1, 0.1);
 
-	Position p = Position(20, 60, -0.2);
-	p.Print();
-	map.SaveToFile("zprint.png", p);
+	robot.SaveParticles();
+
+//	std::vector<Position> parti;
+//	parti.push_back(Position(20, 60, -0.2));
+//	parti.push_back(Position(50, 60, 0.4));
+//	parti.push_back(Position(70, 20, 1.1));
+
+//	Position p = Position(20, 60, -0.2);
+//	p.Print();
+//	map.SaveToFile("zprint.png", &parti[0], parti.size());
 //	map.Print(p);
 
 	// Rand particales
