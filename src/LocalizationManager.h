@@ -13,13 +13,16 @@
 
 class LocalizationManager {
 private:
-	std::vector<Particle> _particles;
 	PlayerCc::LaserProxy* _lp;
 	double* _lasersData;
 	int _lasersLen;
+	Map _map;
+	std::vector<Particle> _particles;
 public:
-	LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen);
-	void Update();
+	LocalizationManager() {}
+	LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map);
+	void Update(double dx, double dy, double dO);
+	Map GetMap();
 	virtual ~LocalizationManager();
 };
 

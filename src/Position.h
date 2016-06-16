@@ -11,17 +11,17 @@
 
 class Position {
 private:
-	void init(signed x, signed y, signed o);
+	void init(float x, float y, float o);
 public:
-	signed x;
-	signed y;
-	signed o;
+	double x;
+	double y;
+	double o;
 	Position();
-	Position(signed x, signed y);
-	Position(signed x, signed y, signed o);
+	Position(float x, float y);
+	Position(float x, float y, float o);
 	Position Clone();
-	virtual ~Position();
 	void Print();
+	virtual ~Position();
 };
 
 #endif /* POSITION_H_ */

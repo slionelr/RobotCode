@@ -71,7 +71,7 @@ Map Map::Nipuha(signed rSize) {
 		for (x = 0; x < width; x++) {
 			int p = _grid.GetValue(y, x);
 			// If its white than
-			if (p) // Is not zero - like white-RGB=255 in png
+			if (p == 0) // Is not zero - like white-RGB=255 in png
 			{
 				nipuha.SetValue(y, x, WHITE);
 			}
@@ -186,26 +186,61 @@ void Map::SaveToFile(std::string file, Position p) {
 
 	for (y=0; y < height; y++) {
 		for (x=0; x < width; x++) {
-			if ((p.x != 0 && p.y != 0) &&
-				(p.x == x && p.y == y)) {
+			if (_grid.GetValue(y, x) == 0) {
 				image[y * width * 4 + x * 4 + 0] = 255;
-				image[y * width * 4 + x * 4 + 1] = 0;
-				image[y * width * 4 + x * 4 + 2] = 0;
+				image[y * width * 4 + x * 4 + 1] = 255;
+				image[y * width * 4 + x * 4 + 2] = 255;
 				image[y * width * 4 + x * 4 + 3] = 255;
 			} else {
-				if (_grid.GetValue(y, x) == 0) {
-					image[y * width * 4 + x * 4 + 0] = 255;
-					image[y * width * 4 + x * 4 + 1] = 255;
-					image[y * width * 4 + x * 4 + 2] = 255;
-					image[y * width * 4 + x * 4 + 3] = 255;
-				} else {
-					image[y * width * 4 + x * 4 + 0] = 0;
-					image[y * width * 4 + x * 4 + 0] = 0;
-					image[y * width * 4 + x * 4 + 0] = 0;
-					image[y * width * 4 + x * 4 + 3] = 255;
-				}
+				image[y * width * 4 + x * 4 + 0] = 0;
+				image[y * width * 4 + x * 4 + 0] = 0;
+				image[y * width * 4 + x * 4 + 0] = 0;
+				image[y * width * 4 + x * 4 + 3] = 255;
 			}
 		}
+	}
+
+	if (p.x != 0 && p.y != 0) {
+		for (y=0-DOT_RADIUS; y < DOT_RADIUS; y++) {
+			for (x=0-DOT_RADIUS; x < DOT_RADIUS; x++) {
+				image[(p.y + y) * width * 4 + (p.x + x) * 4 + 0] = 255;
+				image[(p.y + y) * width * 4 + (p.x + x) * 4 + 1] = 0;
+				image[(p.y + y) * width * 4 + (p.x + x) * 4 + 2] = 0;
+				image[(p.y + y) * width * 4 + (p.x + x) * 4 + 3] = 255;
+			}
+		}
+	}
+
+	// TODO: Sync me, Sagiv and Ariel how the Yaw is relativ to. (the XY gaph or somthing ele.
+	// I say that the Yaw is like the Y direction.
+	//
+	//	------------>(X)
+	// |
+	// |    ^    == Yaw = -1 (because the direction is the oposite direction to the Y
+	// |    |
+	// |
+	// |
+	// V
+	//(Y)
+	int lim = 10;
+	double tx = 0;
+	double ty = 0;
+	double addX = sin(p.o);
+	double addY = cos(p.o);
+	int nx = 0;
+	int ny = 0;
+
+	while ((abs(nx) < lim) && (abs(ny) < lim)) {
+		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 0] = 255;
+		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 1] = 0;
+		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 2] = 0;
+		image[(p.y + ny) * width * 4 + (p.x + nx) * 4 + 3] = 255;
+
+		tx+=addX;
+		ty+=addY;
+
+		nx = tx;
+		ny = ty;
 	}
 
 	//Encode the image

@@ -12,17 +12,22 @@
 #include <libplayerc++/playerc++.h>
 
 #include "Position.h"
+#include "LocalizationManager.h"
+
+#define LASER_COUNT 666
 
 class Robot {
 private:
 	PlayerCc::PlayerClient* pc;
 	PlayerCc::Position2dProxy* pp;
 	PlayerCc::LaserProxy* lp;
-	Position position;
+	Position _position;
+	LocalizationManager _mngLocation;
 public:
-	Robot(const std::string ip, int port);
+	Robot(const std::string ip, int port, Map map);
 	void Read();
 	void SetSpeed(double speed, double yaw);
+	Position GetPosition();
 	virtual ~Robot();
 };
 

@@ -9,14 +9,18 @@
 #define MAP_H_
 
 #include <iostream>
+#include <vector>
 #include "MapUtils/Grid.h"
 #include "Position.h"
+
+#define DOT_RADIUS 2
 
 class Map {
 private:
 	Grid _grid;
 	double _resolution;
 public:
+	Map() {}
 	Map(std::string file, double resolution);
 	Map(Grid grid, double resolution);
 	Map Nipuha(int size);

@@ -8,7 +8,7 @@
 #include <iostream>
 #include "Position.h"
 
-void Position::init(signed x, signed y, signed o) {
+void Position::init(float x, float y, float o) {
 	this->x = x;
 	this->y = y;
 	this->o = o;
@@ -18,11 +18,11 @@ Position::Position() {
 	init(0,0,0);
 }
 
-Position::Position(signed x, signed y) {
+Position::Position(float x, float y) {
 	init(x,y,0);
 }
 
-Position::Position(signed x, signed y, signed o) {
+Position::Position(float x, float y, float o) {
 	init(x,y,o);
 }
 
@@ -31,7 +31,9 @@ Position Position::Clone() {
 }
 
 void Position::Print() {
-	std::cout << "[X: " << this->x << " ][Y: " << this->y << "]" << std::endl;
+	std::cout << "[X: " << this->x << " ]"
+			  << "[Y: " << this->y << " ]"
+			  << "[O: " << this->o << " ]" << std::endl;
 }
 
 Position::~Position() {

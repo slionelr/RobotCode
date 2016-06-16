@@ -20,22 +20,31 @@ int main() {
 
 	ConfigurationManager cnf("parameters.txt");
 
-//	Robot robot("localhost", 6665);
-//	robot.SetSpeed(0.2, 0);
-
 	Map map = Map(cnf.GetMap(), cnf.GetMapResolCM());
 	Map grid = map.MapGridConverter(cnf.GetGridResolCM());
+	Map nipuha = grid.Nipuha(1);
 
-//	Position p = Position(5,5);
-//	map.SaveToFile("zprint.png", p);
+	Robot robot("localhost", 6665, nipuha);
+	robot.SetSpeed(0.1, 0.1);
+
+	Position p = Position(20, 60, -0.2);
+	p.Print();
+	map.SaveToFile("zprint.png", p);
 //	map.Print(p);
 
-//	Map nipuah = map.Nipuha(5);
-
 	// Rand particales
-
+//	int i = 1;
 //	while (true) {
 //		robot.Read();
+////		Position p = robot.GetPosition();
+//
+////		std::cout << "[Yaw: " << p.o << "]" << std::endl;
+////		double px = sin(p.o) * 10;
+////		double py = cos(p.o) * 10;
+////		std::cout << "[PX: " << px << " ][PY: " << py << "]" << std::endl;
+//
+//		std::cout << "Loop " << i << std::endl;
+//		i++;
 //	}
 
 	return 0;
