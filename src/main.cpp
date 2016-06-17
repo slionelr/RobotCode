@@ -14,6 +14,7 @@
 #include "Robot.h"
 #include "Map.h"
 #include "Particle.h"
+#include "WayPointManager.h"
 
 int main() {
 	std::vector<Particle> vp;
@@ -28,6 +29,9 @@ int main() {
 	robot.SetSpeed(0.1, 0.1);
 
 	robot.SaveParticles();
+
+	WayPointManager a(map.GetGrid());
+	a.getWayPoint();
 
 //	std::vector<Position> parti;
 //	parti.push_back(Position(20, 60, -0.2));
