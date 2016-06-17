@@ -8,6 +8,7 @@
 #ifndef POSITION_H_
 #define POSITION_H_
 
+#include "Point.h"
 
 class Position {
 private:
@@ -19,6 +20,7 @@ public:
 	Position();
 	Position(float x, float y);
 	Position(float x, float y, float o);
+	Point GetPoint();
 	Position Clone();
 	void Print();
 	virtual ~Position();

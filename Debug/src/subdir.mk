@@ -8,36 +8,36 @@ CPP_SRCS += \
 ../src/LocalizationManager.cpp \
 ../src/Map.cpp \
 ../src/Particle.cpp \
+../src/Point.cpp \
 ../src/Position.cpp \
 ../src/Robot.cpp \
 ../src/WayPointManager.cpp \
 ../src/aStar.cpp \
-../src/main.cpp \
-../src/point.cpp 
+../src/main.cpp 
 
 OBJS += \
 ./src/ConfigurationManager.o \
 ./src/LocalizationManager.o \
 ./src/Map.o \
 ./src/Particle.o \
+./src/Point.o \
 ./src/Position.o \
 ./src/Robot.o \
 ./src/WayPointManager.o \
 ./src/aStar.o \
-./src/main.o \
-./src/point.o 
+./src/main.o 
 
 CPP_DEPS += \
 ./src/ConfigurationManager.d \
 ./src/LocalizationManager.d \
 ./src/Map.d \
 ./src/Particle.d \
+./src/Point.d \
 ./src/Position.d \
 ./src/Robot.d \
 ./src/WayPointManager.d \
 ./src/aStar.d \
-./src/main.d \
-./src/point.d 
+./src/main.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

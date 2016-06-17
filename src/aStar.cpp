@@ -224,9 +224,10 @@ using namespace std;
 
 
 
-AStar::AStar(Grid grid) {
-_grid = grid;
-
+AStar::AStar(Grid grid, Point start, Point end) {
+	_grid = grid;
+	_start = start;
+	_end = end;
 }
 
 string AStar::getValue(){
@@ -258,8 +259,8 @@ for (int y = 0; y < _grid.GetHeight(); y++) {
 
 			    srand(time(NULL));
 			    int xA, yA, xB, yB;
-			    xB=12;yB=25;xA=60-1;yA=25-1;
-//			    xA=1;yA=10;xB=10;yB=1;
+//			    xB=12;yB=25;xA=60-1;yA=25-1;
+			    xA=_start.x;yA=_start.y;xB=_end.x;yB=_end.y;
 
 			    cout<<"Map Size (X,Y): "<<n<<","<<m<<endl;
 			    cout<<"Start: "<<xA<<","<<yA<<endl;

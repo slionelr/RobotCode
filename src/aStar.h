@@ -9,16 +9,18 @@
 #define ASTAR_H
 
 #include <iostream>
-//using namespace std;
 
 #include "MapUtils/Grid.h"
+#include "Point.h"
 
 class AStar {
 public:
-	AStar(Grid grid);
+	AStar(Grid grid, Point start, Point end);
 	std::string getValue();
 private:
 	Grid _grid;
+	Point _start;
+	Point _end;
 };
 
 #endif

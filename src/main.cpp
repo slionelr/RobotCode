@@ -30,7 +30,9 @@ int main() {
 
 	robot.SaveParticles();
 
-	WayPointManager a(map.GetGrid());
+	Position startGridLoc = map.MapToGridLocation(cnf.GetStartLocation(), nipuha);
+	Position goalGridLoc = map.MapToGridLocation(cnf.GetGoal(), nipuha);
+	WayPointManager a(nipuha.GetGrid(), startGridLoc.GetPoint(), goalGridLoc.GetPoint());
 	a.getWayPoint();
 
 //	std::vector<Position> parti;

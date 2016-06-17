@@ -8,14 +8,14 @@
 #include "Point.h"
 
 Point::Point(unsigned x, unsigned y) {
-	_x = x;
-	_y = y;
+	this->x = x;
+	this->y = y;
 }
 
 unsigned Point::GetX() {
-	return _x;
+	return this->x;
 }
 
 unsigned Point::GetY() {
-	return _y;
+	return this->y;
 }

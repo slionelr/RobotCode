@@ -6,27 +6,25 @@
  */
 #include <iostream>
 #include <vector>
-#include "WayPointManager.h"
-#include "Point.h"
 #include <math.h>
 
+#include "WayPointManager.h"
+
 using namespace std;
-WayPointManager::WayPointManager(Grid grid) {
+WayPointManager::WayPointManager(Grid grid, Point start, Point end) {
 	_grid = grid;
+	_start = start;
+	_end = end;
 }
 
 void WayPointManager::getWayPoint(){
-	AStar a(_grid);
+	AStar a(_grid, _start, _end);
 		string route = a.getValue();
 		int countCurrRoute = 0;
 		int currDirection = 0;
-		int currX = 12;
-		int currY = 25;
+		int currX = _start.GetX();
+		int currY = _start.GetY();
 		vector<Point> vp;
-//
-
-		//
-
 
 		for(int i = route.size() -1; i >= 0; i--) {
 			char c =route.at(i);

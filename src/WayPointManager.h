@@ -13,14 +13,17 @@
 #include <iostream>
 
 #include "MapUtils/Grid.h"
+//#include "Point.h"
 #include "aStar.h"
 
 
 class WayPointManager {
 private:
 	Grid _grid;
+	Point _start;
+	Point _end;
 public:
-	WayPointManager(Grid grid);
+	WayPointManager(Grid grid, Point start, Point end);
 	void getWayPoint();
 };
 

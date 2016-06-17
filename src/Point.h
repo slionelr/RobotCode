@@ -8,14 +8,14 @@
 #ifndef POINT_H_
 #define POINT_H_
 
-
-#endif /* POINT_H_ */
 class Point {
 public:
+	Point() {}
 	Point(unsigned x, unsigned y);
 	unsigned GetX();
 	unsigned GetY();
-private:
-	unsigned _x;
-	unsigned _y;
+	unsigned x;
+	unsigned y;
 };
+
+#endif /* POINT_H_ */

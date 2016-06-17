@@ -26,6 +26,12 @@ Position::Position(float x, float y, float o) {
 	init(x,y,o);
 }
 
+Point Position::GetPoint() {
+	return Point(
+			this->x,
+			this->y);
+}
+
 Position Position::Clone() {
 	return Position(this->x, this->y, this->o);
 }
