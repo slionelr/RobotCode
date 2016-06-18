@@ -17,9 +17,9 @@ WayPointManager::WayPointManager(Grid grid, Point start, Point end) {
 	_end = end;
 }
 
-void WayPointManager::GetWayPoint() {
-	AStar a(_grid, _start, _end);
-	string route = a.getValue();
+std::vector<Point> WayPointManager::GetWayPoints(std::string route) {
+//	AStar a(_grid, _start, _end);
+//	string route = a.getValue();
 	int previusDirection = -1;
 	int countCurrRoute = 0;
 	int currDirection = 0;

@@ -15,6 +15,7 @@
 #include "Robot.h"
 #include "Map.h"
 #include "Particle.h"
+#include "PathPlanner.h"
 #include "WayPointManager.h"
 
 int main() {
@@ -29,12 +30,13 @@ int main() {
 	Robot robot("localhost", 6665, nipuha);
 	robot.SetOdometry(cnf.GetStartLocation());
 //	robot.SetSpeed(0.1, 0.1);
-	robot.SaveParticles();
+//	robot.SaveParticles();
 
-//	Position startGridLoc = map.MapToGridLocation(cnf.GetStartLocation(), nipuha);
-//	Position goalGridLoc = map.MapToGridLocation(cnf.GetGoal(), nipuha);
-//	WayPointManager a(nipuha.GetGrid(), startGridLoc.GetPoint(), goalGridLoc.GetPoint());
-//	a.getWayPoint();
+	Position startGridLoc = map.MapToGridLocation(cnf.GetStartLocation(), nipuha);
+	Position goalGridLoc = map.MapToGridLocation(cnf.GetGoal(), nipuha);
+	PathPlanner plan(nipuha.GetGrid(), startGridLoc.GetPoint(), goalGridLoc.GetPoint());
+	WayPointManager a(nipuha.GetGrid(), startGridLoc.GetPoint(), goalGridLoc.GetPoint());
+	a.GetWayPoints(plan.GetPath());
 
 //	std::vector<Position> parti;
 //	parti.push_back(Position(20, 60, -0.2));

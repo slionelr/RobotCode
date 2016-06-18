@@ -1,23 +1,27 @@
 /*
- * PathPlanner.h
+ * Grid.h
  *
- *  Created on: Jun 18, 2016
+ *  Created on: Apr 10, 2016
  *      Author: user
  */
 
-#ifndef PATHPLANNER_H_
-#define PATHPLANNER_H_
+#ifndef ASTAR_H
+#define ASTAR_H
 
-#include "aStar.h"
-#include "WayPointManager.h"
+#include <iostream>
+
+#include "MapUtils/Grid.h"
+#include "Point.h"
 
 class PathPlanner {
 private:
-//	AStar _a;
-//	WayPointManager _mngWaypoints;
+	Grid _grid;
+	Point _start;
+	Point _end;
 public:
-	PathPlanner();
-	virtual ~PathPlanner();
+	PathPlanner() {}
+	PathPlanner(Grid grid, Point start, Point end);
+	std::string GetPath();
 };
 
-#endif /* PATHPLANNER_H_ */
+#endif

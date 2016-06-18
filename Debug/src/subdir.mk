@@ -13,7 +13,6 @@ CPP_SRCS += \
 ../src/Position.cpp \
 ../src/Robot.cpp \
 ../src/WayPointManager.cpp \
-../src/aStar.cpp \
 ../src/main.cpp 
 
 OBJS += \
@@ -26,7 +25,6 @@ OBJS += \
 ./src/Position.o \
 ./src/Robot.o \
 ./src/WayPointManager.o \
-./src/aStar.o \
 ./src/main.o 
 
 CPP_DEPS += \
@@ -39,7 +37,6 @@ CPP_DEPS += \
 ./src/Position.d \
 ./src/Robot.d \
 ./src/WayPointManager.d \
-./src/aStar.d \
 ./src/main.d 
 
 

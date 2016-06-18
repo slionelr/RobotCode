@@ -7,6 +7,7 @@
 
 #include "Robot.h"
 
+#define METER_TO_CM 100
 #define DEGREE_TOLERANCE 1
 #define MOVE_TOLERANCE 0.1
 
@@ -55,19 +56,15 @@ void Robot::Stop() {
 
 Position Robot::GetPosition() {
 	return Position(
-			pp->GetXPos(),
-			pp->GetYPos(),
+			pp->GetXPos() * METER_TO_CM,
+			pp->GetYPos() * METER_TO_CM,
 			pp->GetYaw()
 			);
 }
 
 // TODO: Calculate it with SLAM/LocalizationManager
 Position Robot::GetEstPosition() {
-	return Position(
-			pp->GetXPos(),
-			pp->GetYPos(),
-			pp->GetYaw()
-			);
+	return GetPosition();
 }
 
 bool Robot::MoveTo(Point dst) {

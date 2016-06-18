@@ -16,8 +16,6 @@ public:
 	unsigned y;
 	Point() {}
 	Point(unsigned x, unsigned y);
-//	unsigned GetX();
-//	unsigned GetY();
 	void Print();
 };
 

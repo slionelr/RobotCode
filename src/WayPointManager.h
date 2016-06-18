@@ -8,14 +8,12 @@
 #ifndef WAYPOINTMANAGER_H_
 #define WAYPOINTMANAGER_H_
 
-
-//#endif /* WAYPOINTMANAGER_H_ */
 #include <iostream>
+#include <vector>
 
-#include "MapUtils/Grid.h"
-//#include "Point.h"
-#include "aStar.h"
-
+//#include "MapUtils/Grid.h"
+//#include "PathPlanner.h"
+#include "Map.h"
 
 class WayPointManager {
 private:
@@ -23,8 +21,9 @@ private:
 	Point _start;
 	Point _end;
 public:
+	WayPointManager() {}
 	WayPointManager(Grid grid, Point start, Point end);
-	void GetWayPoint();
+	std::vector<Point> GetWayPoints(std::string route);
 };
 
-#endif
+#endif /* WAYPOINTMANAGER_H_ */
