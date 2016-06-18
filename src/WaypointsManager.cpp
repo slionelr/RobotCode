@@ -8,18 +8,15 @@
 #include <vector>
 #include <math.h>
 
-#include "WayPointManager.h"
+#include "WaypointsManager.h"
 
 using namespace std;
-WayPointManager::WayPointManager(Grid grid, Point start, Point end) {
+WaypointsManager::WaypointsManager(Grid grid, Point start) {
 	_grid = grid;
 	_start = start;
-	_end = end;
 }
 
-std::vector<Point> WayPointManager::GetWayPoints(std::string route) {
-//	AStar a(_grid, _start, _end);
-//	string route = a.getValue();
+std::vector<Point> WaypointsManager::GetWayPoints(std::string route) {
 	int previusDirection = -1;
 	int countCurrRoute = 0;
 	int currDirection = 0;

@@ -7,7 +7,7 @@
 
 #include "Robot.h"
 
-#define METER_TO_CM 100
+#define METER_TO_CM 10
 #define DEGREE_TOLERANCE 1
 #define MOVE_TOLERANCE 0.1
 
@@ -57,7 +57,7 @@ void Robot::Stop() {
 Position Robot::GetPosition() {
 	return Position(
 			pp->GetXPos() * METER_TO_CM,
-			pp->GetYPos() * METER_TO_CM,
+			pp->GetYPos() * METER_TO_CM * -1,
 			pp->GetYaw()
 			);
 }
@@ -80,17 +80,18 @@ bool Robot::MoveTo(Point dst) {
 
 	SetSpeed(0.06,0);
 	Position current = GetEstPosition();
-	while(((current.x *10) < (dst.x - MOVE_TOLERANCE)) ||
-		  ((current.x *10) > (dst.x + MOVE_TOLERANCE)) ||
-		  ((current.y *-10) < (dst.y - MOVE_TOLERANCE)) ||
-		  ((current.y *-10) > (dst.y + MOVE_TOLERANCE))) {
+	while((current.x < (dst.x - MOVE_TOLERANCE)) ||
+		  (current.x > (dst.x + MOVE_TOLERANCE)) ||
+		  (current.y < (dst.y - MOVE_TOLERANCE)) ||
+		  (current.y > (dst.y + MOVE_TOLERANCE))) {
 		Read();
 		current = GetEstPosition();
-		std::cout <<  "Current Position:[" << current.x*10 << "," << current.y*-10 << "]" << std::endl;
+		std::cout <<  "Current Position:[" << current.x << "," << current.y << "]" << std::endl;
 	}
 	Stop();
 
 	std::cout << "Robot is Done Moving" << std::endl;
+	return true;
 }
 
 bool Robot::RoteteTo(Point dst) {
@@ -184,12 +185,11 @@ double Robot::FindRotationSide(double srcYaw, double dstYaw)
 	}
 
 
-	if(leftCost < rightCost)
-	{
+	if(leftCost < rightCost) {
+		// Turn Left
 		return 0.1;
-	}
-	else
-	{
+	} else {
+		// Turn Right
 		return -0.1;
 	}
 }

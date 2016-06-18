@@ -298,9 +298,8 @@ string PathPlanner::GetPath() {
 		map[x][y] = 4;
 
 		// display the map with the route
-		for (int y = 0; y < m; y++)
-		{
-			for (int x = 0; x < n; x++)
+		for (int y = 0; y < n; y++) {
+			for (int x = 0; x < m; x++) {
 				if (map[x][y] == 0)
 					cout << ".";
 				else if (map[x][y] == 1)
@@ -311,6 +310,7 @@ string PathPlanner::GetPath() {
 					cout << "R"; //route
 				else if (map[x][y] == 2)
 					cout << "S"; //finish
+			}
 			cout << endl;
 		}
 	}

@@ -5,8 +5,8 @@
  *      Author: user
  */
 
-#ifndef WAYPOINTMANAGER_H_
-#define WAYPOINTMANAGER_H_
+#ifndef WAYPOINTSMANAGER_H_
+#define WAYPOINTSMANAGER_H_
 
 #include <iostream>
 #include <vector>
@@ -15,15 +15,14 @@
 //#include "PathPlanner.h"
 #include "Map.h"
 
-class WayPointManager {
+class WaypointsManager {
 private:
 	Grid _grid;
 	Point _start;
-	Point _end;
 public:
-	WayPointManager() {}
-	WayPointManager(Grid grid, Point start, Point end);
+	WaypointsManager() {}
+	WaypointsManager(Grid grid, Point start);
 	std::vector<Point> GetWayPoints(std::string route);
 };
 
-#endif /* WAYPOINTMANAGER_H_ */
+#endif /* WAYPOINTSMANAGER_H_ */

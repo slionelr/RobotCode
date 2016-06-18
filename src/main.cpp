@@ -16,7 +16,7 @@
 #include "Map.h"
 #include "Particle.h"
 #include "PathPlanner.h"
-#include "WayPointManager.h"
+#include "WaypointsManager.h"
 
 int main() {
 //	std::vector<Particle> vp;
@@ -35,8 +35,8 @@ int main() {
 	Position startGridLoc = map.MapToGridLocation(cnf.GetStartLocation(), nipuha);
 	Position goalGridLoc = map.MapToGridLocation(cnf.GetGoal(), nipuha);
 	PathPlanner plan(nipuha.GetGrid(), startGridLoc.GetPoint(), goalGridLoc.GetPoint());
-	WayPointManager a(nipuha.GetGrid(), startGridLoc.GetPoint(), goalGridLoc.GetPoint());
-	a.GetWayPoints(plan.GetPath());
+	WaypointsManager a(nipuha.GetGrid(), startGridLoc.GetPoint());
+	std::vector<Point> wp = a.GetWayPoints(plan.GetPath());
 
 //	std::vector<Position> parti;
 //	parti.push_back(Position(20, 60, -0.2));
