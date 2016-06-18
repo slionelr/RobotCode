@@ -5,12 +5,14 @@
  *      Author: user
  */
 
+#ifndef LOCALIZATIONMANAGER_H_
+#define LOCALIZATIONMANAGER_H_
+
 #include <vector>
 #include "Point.h"
 #include "Particle.h"
 
-#ifndef LOCALIZATIONMANAGER_H_
-#define LOCALIZATIONMANAGER_H_
+#define MAX_PARTICLES 50
 
 class LocalizationManager {
 private:
@@ -23,6 +25,8 @@ public:
 	LocalizationManager() {}
 	LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map grid);
 	void Update(double dx, double dy, double dO);
+	void AddParticle(Particle p);
+	void RemoveParticle(Particle p);
 	Map GetMap();
 	std::vector<Position> GetParticlesPosition();
 	void PaticlesImage();

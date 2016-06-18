@@ -18,7 +18,7 @@ LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int las
 	for (int i=0; i < 15; i++) {
 		Particle pr = Particle(rand() % grid.GetWidth(),
 							   rand() % grid.GetHeight(),
-							   (rand() % (unsigned)(M_PI * 10)) / 10);
+							   (rand() % (unsigned)(M_PI * 100)) / 100);
 		_particles.push_back(pr);
 	}
 }
@@ -32,6 +32,22 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 	for (index=0; index < _particles.size(); index++) {
 		_particles[index].Update(_lasersData, _lasersLen, dx, dy, dO, _map);
 	}
+}
+
+void LocalizationManager::AddParticle(Particle p) {
+	if (_particles.size() < MAX_PARTICLES) {
+		_particles.push_back(p);
+	}
+}
+
+void LocalizationManager::RemoveParticle(Particle p) {
+	unsigned index;
+	for (index=0; index < _particles.size(); index++) {
+		if (_particles[index] == p) {
+			break;
+		}
+	}
+	_particles.erase(_particles.begin() + index);
 }
 
 Map LocalizationManager::GetMap() {

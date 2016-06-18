@@ -49,6 +49,11 @@ double Particle::ProbByLaser(double* arrLaser, int laserLen, Map map) {
 	return 1.0;
 }
 
+int Particle::operator==(const Particle &r) {
+	return ((position.x == r.position.x) &&
+			(position.y == r.position.y));
+}
+
 Particle::~Particle() {
 	// TODO Auto-generated destructor stub
 }

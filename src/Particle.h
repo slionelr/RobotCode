@@ -22,6 +22,7 @@ public:
 	Position position;
 	Particle(double x, double y, double o);
 	void Update(double* arrLaser, int laserLen, double dx, double dy, double dO, Map map);
+	int operator==(const Particle &);
 	virtual ~Particle();
 };
 
