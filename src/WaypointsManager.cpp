@@ -27,6 +27,9 @@ std::vector<Point> WaypointsManager::GetWayPoints(std::string route) {
 	int n = _grid.GetHeight();
 	int m = _grid.GetWidth();
 	map = new int *[m];
+
+	/////////////////////////////////////////////////////////////
+	// TODO: Is it necessary? Don't we have this data already?
 	for(int i = 0; i <m; i++){
 		map[i] = new int[n];
 	}
@@ -37,6 +40,7 @@ std::vector<Point> WaypointsManager::GetWayPoints(std::string route) {
 			map[x][y] = pix;
 		}
 	}
+	/////////////////////////////////////////////////////////////
 
 	for (int i = 0; i < route.size(); i++) {
 		char c = route.at(i);
@@ -96,9 +100,11 @@ std::vector<Point> WaypointsManager::GetWayPoints(std::string route) {
 				break;
 			default:
 				break;
-			}
+		} // End Switch-Case
+
 		map[currX][currY] = 3;
-	}
+	} // End loop
+
 	for (int i = 0; i < vp.size(); ++i) {
 		vp[i].Print();
 	}
@@ -125,4 +131,6 @@ std::vector<Point> WaypointsManager::GetWayPoints(std::string route) {
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
+
+	return vp;
 }

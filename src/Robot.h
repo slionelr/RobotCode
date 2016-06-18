@@ -23,6 +23,7 @@ private:
 	PlayerCc::LaserProxy* lp;
 	Position _position;
 	LocalizationManager _mngLocation;
+	Map _grid;
 	void Read();
 	double FindRotationSide(double srcYaw, double dstYaw);
 	double FindDegreeToRotate(Point src, Point dst/*, double Yaw*/);
@@ -33,6 +34,7 @@ public:
 	void Stop();
 	Position GetPosition();
 	Position GetEstPosition();
+	Position GetPositionOnGrid();
 	bool MoveTo(Point dst);
 	bool RoteteTo(Point dst);
 	void SaveParticles();

@@ -16,12 +16,12 @@
 #define DOT_RADIUS		2
 #define DIRECTION_LIMIT	10
 
-Map::Map(std::string file, double resolution) {
+Map::Map(std::string file, double convResolution) {
 	std::vector<unsigned char> image;
 	unsigned height, width;
 	unsigned x, y;
 
-	_resolution = resolution;
+	_convResolution = convResolution;
 
 	//Decode the image
 	unsigned error = lodepng::decode(image, width, height, file);
@@ -58,7 +58,7 @@ Map::Map(std::string file, double resolution) {
 
 Map::Map(Grid grid, double resolution) {
 	_grid = grid;
-	_resolution = resolution;
+	_convResolution = resolution;
 }
 
 Map Map::Nipuha(signed rSize) {
@@ -93,7 +93,7 @@ Map Map::Nipuha(signed rSize) {
 		}
 	}
 
-	return Map::Map(nipuha, _resolution);
+	return Map::Map(nipuha, _convResolution);
 }
 
 Grid Map::GetGrid() {
@@ -101,7 +101,7 @@ Grid Map::GetGrid() {
 }
 
 double Map::GetResolution() {
-	return _resolution;
+	return _convResolution;
 }
 
 unsigned Map::GetHeight() {
@@ -113,7 +113,7 @@ unsigned Map::GetWidth() {
 }
 
 Map Map::Clone() {
-	return Map::Map(_grid.Clone(), _resolution);
+	return Map::Map(_grid.Clone(), _convResolution);
 }
 
 void Map::Print(Position p) {
@@ -141,31 +141,31 @@ void Map::Print(Position p) {
 	}
 }
 
-Map Map::MapGridConverter(double gridResolution) {
+Map Map::MapGridConverter(double convResolution) {
 	unsigned height = this->GetHeight();
 	unsigned width = this->GetWidth();
-	unsigned matrixSize = gridResolution / _resolution;
+//	unsigned matrixSize = convResolution;
 
-	unsigned nh = ceil((double)height / (double)matrixSize);
-	unsigned nw = ceil((double)width / (double)matrixSize);
+	unsigned nh = ceil((double)height / (double)convResolution);
+	unsigned nw = ceil((double)width / (double)convResolution);
 
 	Grid n(nh, nw);
-	for (unsigned y=0; y < height; y+=matrixSize) {
-		for (unsigned x=0; x < width; x+=matrixSize) {
+	for (unsigned y=0; y < height; y+=convResolution) {
+		for (unsigned x=0; x < width; x+=convResolution) {
 			int obstacle = 0;
-			for (unsigned my=0; my < matrixSize; my++) {
-				for (unsigned mx=0; mx < matrixSize; mx++) {
+			for (unsigned my=0; my < convResolution; my++) {
+				for (unsigned mx=0; mx < convResolution; mx++) {
 					if (y+my < height && x+mx < width) {
 						int v = _grid.GetValue(y+my,x+mx);
 						obstacle = obstacle | v;
 					}
 				}
 			}
-			n.SetValue(y / matrixSize, x / matrixSize, obstacle);
+			n.SetValue(y / convResolution, x / convResolution, obstacle);
 		}
 	}
 
-	return Map(n, gridResolution);
+	return Map(n, convResolution);
 }
 
 
@@ -257,22 +257,14 @@ void Map::AddDirctionsToImage(unsigned char* image, std::vector<Position> parti)
 	}
 }
 
+Position Map::ConvertLocation(Position p) {
+	Position n(floor(p.x / _convResolution),
+			   floor(p.y / _convResolution),
+			   p.o);
+	return n;
+}
+
 Map::~Map() {
 	// TODO Auto-generated destructor stub
 }
 
-Position Map::MapToGridLocation(Position p, Map grid) {
-	int convFactor = grid.GetResolution() / this->GetResolution();
-	return Position(
-			floor(p.x / convFactor),
-			floor(p.y / convFactor)
-			);
-}
-
-Position Map::GridToMapLocation(Position p, Map map) {
-	int convFactor = this->GetResolution() / map.GetResolution();
-	return Position(
-			floor(p.x * convFactor),
-			floor(p.y * convFactor)
-			);
-}

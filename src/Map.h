@@ -17,21 +17,20 @@
 class Map {
 private:
 	Grid _grid;
-	double _resolution;
+	double _convResolution;
 	void AddDirctionsToImage(unsigned char* image, std::vector<Position> parti);
 public:
 	Map() {}
-	Map(std::string file, double resolution);
+	Map(std::string file, double convResolution);
 	Map(Grid grid, double resolution);
 	Map Nipuha(int size);
 	Grid GetGrid();
 	double GetResolution();
-	Map MapGridConverter(double gridResolution);
+	Map MapGridConverter(double convResolution);
 	unsigned GetHeight();
 	unsigned GetWidth();
 	Map Clone();
-	Position MapToGridLocation(Position p, Map grid);
-	Position GridToMapLocation(Position p, Map map);
+	Position ConvertLocation(Position p);
 	void Print(Position p);
 	void SaveToFile(std::string file);
 	void SaveToFile(std::string file, std::vector<Position> parti);

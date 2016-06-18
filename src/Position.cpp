@@ -8,7 +8,7 @@
 #include <iostream>
 #include "Position.h"
 
-void Position::init(float x, float y, float o) {
+void Position::init(int x, int y, double o) {
 	this->x = x;
 	this->y = y;
 	this->o = o;
@@ -18,18 +18,17 @@ Position::Position() {
 	init(0,0,0);
 }
 
-Position::Position(float x, float y) {
+Position::Position(int x, int y) {
 	init(x,y,0);
 }
 
-Position::Position(float x, float y, float o) {
+Position::Position(int x, int y, double o) {
 	init(x,y,o);
 }
 
 Point Position::GetPoint() {
-	return Point(
-			this->x,
-			this->y);
+	Point p = Point(this->x, this->y);
+	return p;
 }
 
 Position Position::Clone() {

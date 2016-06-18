@@ -7,7 +7,9 @@
 
 #include "Robot.h"
 
-#define METER_TO_CM 10
+#define METER_TO_CM(m) (m * 10)
+#define CM_TO_METER(cm) (cm / 10)
+
 #define DEGREE_TOLERANCE 1
 #define MOVE_TOLERANCE 0.1
 
@@ -18,12 +20,15 @@ Robot::Robot(const std::string ip, int port, Map grid) {
 	lp = new PlayerCc::LaserProxy(pc, 0);
 	_mngLocation = LocalizationManager(lp, LASER_COUNT, grid);
 
+	_grid = grid;
+
 	// We need this so that real robot will activate its motor
 	pp->SetMotorEnable(true);
 }
 
 void Robot::SetOdometry(Position p) {
-	pp->SetOdometry(p.x, p.y, p.o);
+//	pp->SetOdometry(p.x, p.y, p.o);
+	pp->SetOdometry(CM_TO_METER(p.x), -1 * CM_TO_METER(p.y), DEGREE_2_RAD(p.o));
 }
 
 void Robot::Read() {
@@ -55,16 +60,33 @@ void Robot::Stop() {
 }
 
 Position Robot::GetPosition() {
-	return Position(
-			pp->GetXPos() * METER_TO_CM,
-			pp->GetYPos() * METER_TO_CM * -1,
+	Read();
+	while (pp->GetXPos() == 0 && pp->GetYPos() == 0 && pp->GetYaw() == 0) {
+		Read();
+	}
+	Position p = Position(
+			METER_TO_CM(pp->GetXPos()),
+			METER_TO_CM(pp->GetYPos()) * -1,
+//			METER_TO_CM(pp->GetYPos()),
+
+//			pp->GetXPos(),
+//			pp->GetYPos(),
+
 			pp->GetYaw()
 			);
+
+	return p;
 }
 
 // TODO: Calculate it with SLAM/LocalizationManager
 Position Robot::GetEstPosition() {
 	return GetPosition();
+}
+
+Position Robot::GetPositionOnGrid() {
+	Position est = GetEstPosition();
+	Position onGrid = _grid.ConvertLocation(est);
+	return onGrid;
 }
 
 bool Robot::MoveTo(Point dst) {
@@ -79,13 +101,13 @@ bool Robot::MoveTo(Point dst) {
 				 "[" << dst.x << "," << dst.y << "]" << std::endl;
 
 	SetSpeed(0.06,0);
-	Position current = GetEstPosition();
+	Position current = GetPositionOnGrid();
 	while((current.x < (dst.x - MOVE_TOLERANCE)) ||
 		  (current.x > (dst.x + MOVE_TOLERANCE)) ||
 		  (current.y < (dst.y - MOVE_TOLERANCE)) ||
 		  (current.y > (dst.y + MOVE_TOLERANCE))) {
-		Read();
-		current = GetEstPosition();
+//		Read();
+		current = GetPositionOnGrid();
 		std::cout <<  "Current Position:[" << current.x << "," << current.y << "]" << std::endl;
 	}
 	Stop();
@@ -95,18 +117,20 @@ bool Robot::MoveTo(Point dst) {
 }
 
 bool Robot::RoteteTo(Point dst) {
-	Position current = GetEstPosition();
+	Position current = GetPositionOnGrid();
 
 	double degree = FindDegreeToRotate(current.GetPoint(), dst);
 	double rotationSide = FindRotationSide(current.o, degree);
 
-	double maxDegreeTolerance = degree + DEGREE_TOLERANCE;
-	double minDegreeTolerance = degree - DEGREE_TOLERANCE;
+	double maxDegreeTolerance = degree + DEGREE_2_RAD(DEGREE_TOLERANCE);
+	double minDegreeTolerance = degree - DEGREE_2_RAD(DEGREE_TOLERANCE);
 
 	SetSpeed(0, rotationSide);
-	while((GetEstPosition().o < minDegreeTolerance) || (GetEstPosition().o > maxDegreeTolerance)) {
-		Read();
-		std::cout <<  "Robot:" << GetEstPosition().o << std::endl;
+	while((GetPositionOnGrid().o < minDegreeTolerance) || (GetPositionOnGrid().o > maxDegreeTolerance)) {
+//		Read();
+		std::cout <<  "Robot:" << GetPositionOnGrid().o << std::endl;
+		Position c = GetPositionOnGrid();
+		c.Print();
 	}
 	Stop();
 
@@ -126,18 +150,24 @@ Robot::~Robot() {
 
 // Private Function
 double Robot::FindDegreeToRotate(Point src, Point dst/*, double Yaw*/) {
-	double linearX;
-	double linearY;
-	//int yaw;
+//	double linearX;
+//	double linearY;
+//	int yaw;
+	int linearX;
+	int linearY;
 
 	linearX = dst.x - src.x;
 	linearY = -1 * (dst.y - src.y);
+//	linearY = dst.y - src.y;
 //	yaw = Yaw;
 
-	int linearXint = linearX * 10000;
-	int linearYint = linearY * 10000;
+//	int linearXint = linearX * 10000;
+//	int linearYint = linearY * 10000;
+	int linearXint = linearX;
+	int linearYint = linearY;
 
-	double degreeRobotToWaypoint = atan2(linearYint, linearXint) *  180 / M_PI;
+//	double degreeRobotToWaypoint = atan2(linearYint, linearXint) *  180 / M_PI;
+	double degreeRobotToWaypoint = atan2(linearYint, linearXint);
 
 	return degreeRobotToWaypoint;
 }

@@ -10,16 +10,19 @@
 
 #include "Point.h"
 
+#define DEGREE_2_RAD(d) (d * M_PI / 180)
+#define RAD_2_DEGREE(r) (r / M_PI * 180)
+
 class Position {
 private:
-	void init(float x, float y, float o);
+	void init(int x, int y, double o);
 public:
-	double x;
-	double y;
+	int x;
+	int y;
 	double o;
 	Position();
-	Position(float x, float y);
-	Position(float x, float y, float o);
+	Position(int x, int y);
+	Position(int x, int y, double o);
 	Point GetPoint();
 	Position Clone();
 	void Print();

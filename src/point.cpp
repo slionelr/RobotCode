@@ -5,9 +5,11 @@
  *      Author: user
  */
 
+#include <iostream>
+
 #include "Point.h"
 
-Point::Point(unsigned x, unsigned y) {
+Point::Point(int x, int y) {
 	this->x = x;
 	this->y = y;
 }
