@@ -8,14 +8,17 @@
 #ifndef POINT_H_
 #define POINT_H_
 
+#include <iostream>
+
 class Point {
 public:
-	Point() {}
-	Point(unsigned x, unsigned y);
-	unsigned GetX();
-	unsigned GetY();
 	unsigned x;
 	unsigned y;
+	Point() {}
+	Point(unsigned x, unsigned y);
+//	unsigned GetX();
+//	unsigned GetY();
+	void Print();
 };
 
 #endif /* POINT_H_ */

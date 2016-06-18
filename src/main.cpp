@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <libplayerc++/playerc++.h>
 
 #include "ConfigurationManager.h"
 #include "Robot.h"
@@ -17,7 +18,7 @@
 #include "WayPointManager.h"
 
 int main() {
-	std::vector<Particle> vp;
+//	std::vector<Particle> vp;
 
 	ConfigurationManager cnf("parameters.txt");
 
@@ -26,14 +27,14 @@ int main() {
 	Map nipuha = grid.Nipuha(1);
 
 	Robot robot("localhost", 6665, nipuha);
-	robot.SetSpeed(0.1, 0.1);
-
+	robot.SetOdometry(cnf.GetStartLocation());
+//	robot.SetSpeed(0.1, 0.1);
 	robot.SaveParticles();
 
-	Position startGridLoc = map.MapToGridLocation(cnf.GetStartLocation(), nipuha);
-	Position goalGridLoc = map.MapToGridLocation(cnf.GetGoal(), nipuha);
-	WayPointManager a(nipuha.GetGrid(), startGridLoc.GetPoint(), goalGridLoc.GetPoint());
-	a.getWayPoint();
+//	Position startGridLoc = map.MapToGridLocation(cnf.GetStartLocation(), nipuha);
+//	Position goalGridLoc = map.MapToGridLocation(cnf.GetGoal(), nipuha);
+//	WayPointManager a(nipuha.GetGrid(), startGridLoc.GetPoint(), goalGridLoc.GetPoint());
+//	a.getWayPoint();
 
 //	std::vector<Position> parti;
 //	parti.push_back(Position(20, 60, -0.2));

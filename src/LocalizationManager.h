@@ -6,6 +6,7 @@
  */
 
 #include <vector>
+#include "Point.h"
 #include "Particle.h"
 
 #ifndef LOCALIZATIONMANAGER_H_
@@ -20,9 +21,10 @@ private:
 	std::vector<Particle> _particles;
 public:
 	LocalizationManager() {}
-	LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map);
+	LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map grid);
 	void Update(double dx, double dy, double dO);
 	Map GetMap();
+	std::vector<Position> GetParticlesPosition();
 	void PaticlesImage();
 	virtual ~LocalizationManager();
 };

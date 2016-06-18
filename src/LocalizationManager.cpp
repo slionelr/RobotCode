@@ -8,17 +8,17 @@
 #include <stdlib.h>
 #include "LocalizationManager.h"
 
-LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map) {
+LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map grid) {
 	//_particles(); // Already initialized at declaration
 	_lp = arrLaser;
 	_lasersLen = lasersLen;
 	_lasersData = (double*)malloc(lasersLen * sizeof(double));
-	_map = map;
+	_map = grid;
 
 	for (int i=0; i < 15; i++) {
-		Particle pr = Particle(rand() % map.GetWidth(),
-							   rand() % map.GetHeight(),
-							   rand() % (unsigned)M_PI);
+		Particle pr = Particle(rand() % grid.GetWidth(),
+							   rand() % grid.GetHeight(),
+							   (rand() % (unsigned)(M_PI * 10)) / 10);
 		_particles.push_back(pr);
 	}
 }
@@ -38,12 +38,17 @@ Map LocalizationManager::GetMap() {
 	return this->_map;
 }
 
-void LocalizationManager::PaticlesImage() {
+std::vector<Position> LocalizationManager::GetParticlesPosition() {
 	std::vector<Position> v;
 	for (int i=0; i < _particles.size(); i++) {
 		v.push_back(_particles[i].position);
 	}
-	_map.SaveToFile("particles.png", &v[0], _particles.size());
+	return v;
+}
+
+void LocalizationManager::PaticlesImage() {
+	std::vector<Position> v = GetParticlesPosition();
+	_map.SaveToFile("particles.png", v);
 }
 
 LocalizationManager::~LocalizationManager() {

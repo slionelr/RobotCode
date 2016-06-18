@@ -23,11 +23,18 @@ private:
 	PlayerCc::LaserProxy* lp;
 	Position _position;
 	LocalizationManager _mngLocation;
-public:
-	Robot(const std::string ip, int port, Map map);
 	void Read();
+	double FindRotationSide(double srcYaw, double dstYaw);
+	double FindDegreeToRotate(Point src, Point dst/*, double Yaw*/);
+public:
+	Robot(const std::string ip, int port, Map grid);
+	void SetOdometry(Position p);
 	void SetSpeed(double speed, double yaw);
+	void Stop();
 	Position GetPosition();
+	Position GetEstPosition();
+	bool MoveTo(Point dst);
+	bool RoteteTo(Point dst);
 	void SaveParticles();
 	virtual ~Robot();
 };

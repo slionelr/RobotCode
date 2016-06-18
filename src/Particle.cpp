@@ -41,7 +41,8 @@ double Particle::ProbByMov(double dx, double dy, double dO) {
 		probO = M_PI / abs(dO) / 10;
 	}
 
-	return probO * (d / 10);
+	// TODO: Do some probabilty calculation for distance
+	return probO * 1;
 }
 
 double Particle::ProbByLaser(double* arrLaser, int laserLen, Map map) {

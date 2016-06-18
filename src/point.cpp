@@ -12,10 +12,14 @@ Point::Point(unsigned x, unsigned y) {
 	this->y = y;
 }
 
-unsigned Point::GetX() {
-	return this->x;
-}
+//unsigned Point::GetX() {
+//	return this->x;
+//}
+//
+//unsigned Point::GetY() {
+//	return this->y;
+//}
 
-unsigned Point::GetY() {
-	return this->y;
+void Point::Print() {
+	std::cout << "[X: " << this->x << "] [Y: " << this->y << "]" << std::endl;
 }

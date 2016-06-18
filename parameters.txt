@@ -1,4 +1,4 @@
-map: newGridMap.png
+map: Robotic.png
 startLocation: 362 305 20
 goal: 169 138
 robotSize: 30 30

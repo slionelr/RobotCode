@@ -24,7 +24,7 @@ private:
 	Point _end;
 public:
 	WayPointManager(Grid grid, Point start, Point end);
-	void getWayPoint();
+	void GetWayPoint();
 };
 
 #endif

@@ -168,19 +168,12 @@ Map Map::MapGridConverter(double gridResolution) {
 	return Map(n, gridResolution);
 }
 
-Position Map::MapToGridLocation(Position p, Map grid) {
-	int convFactor = grid.GetResolution() / this->GetResolution();
-	return Position(
-			floor(p.x / convFactor),
-			floor(p.y / convFactor)
-			);
-}
 
 void Map::SaveToFile(std::string file) {
-	SaveToFile(file, NULL, 0);
+	SaveToFile(file, std::vector<Position>());
 }
 
-void Map::SaveToFile(std::string file, Position* parti, int partiLen) {
+void Map::SaveToFile(std::string file, std::vector<Position> parti) {
 	// Convert map to image vector
 	signed height = this->GetHeight();
 	signed width = this->GetWidth();
@@ -203,7 +196,7 @@ void Map::SaveToFile(std::string file, Position* parti, int partiLen) {
 		}
 	}
 
-	AddDirctionsToImage(&image[0], parti, partiLen);
+	AddDirctionsToImage(&image[0], parti);
 
 	//Encode the image
 	unsigned error = lodepng::encode(file, image, width, height);
@@ -214,8 +207,9 @@ void Map::SaveToFile(std::string file, Position* parti, int partiLen) {
 				<< lodepng_error_text(error) << std::endl;
 }
 
-void Map::AddDirctionsToImage(unsigned char* image, Position* parti, int partiLen) {
+void Map::AddDirctionsToImage(unsigned char* image, std::vector<Position> parti) {
 	unsigned width = this->GetWidth();
+	int partiLen = parti.size();
 
 	for (int i=0; i < partiLen; i++) {
 		Position p = parti[i];
@@ -230,21 +224,21 @@ void Map::AddDirctionsToImage(unsigned char* image, Position* parti, int partiLe
 			}
 		}
 
-		// TODO: Sync me, Sagiv and Ariel how the Yaw is relativ to. (the XY gaph or somthing ele.
-		// I say that the Yaw is like the Y direction.
+		// TODO: Check that the Yaw is correct
+		// Yaw is like the Y direction.
 		//
 		//	------------>(X)
 		// |
-		// |    ^    == Yaw = -1 (because the direction is the oposite direction to the Y
-		// |    |
+		// |    ->    == Yaw = 0 (because the direction is with the X)
+		// |
 		// |
 		// |
 		// V
 		//(Y)
 		double tx = 0;
 		double ty = 0;
-		double addX = sin(p.o);
-		double addY = cos(p.o);
+		double addX = cos(p.o);
+		double addY = sin(p.o);
 		int nx = 0;
 		int ny = 0;
 
@@ -267,3 +261,18 @@ Map::~Map() {
 	// TODO Auto-generated destructor stub
 }
 
+Position Map::MapToGridLocation(Position p, Map grid) {
+	int convFactor = grid.GetResolution() / this->GetResolution();
+	return Position(
+			floor(p.x / convFactor),
+			floor(p.y / convFactor)
+			);
+}
+
+Position Map::GridToMapLocation(Position p, Map map) {
+	int convFactor = this->GetResolution() / map.GetResolution();
+	return Position(
+			floor(p.x * convFactor),
+			floor(p.y * convFactor)
+			);
+}
