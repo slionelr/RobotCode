@@ -8,6 +8,10 @@
 
 #include "Particle.h"
 
+//Particle::Particle(Position p) {
+//	position = p;
+//}
+
 Particle::Particle(double x, double y, double o) {
 	this->position.x = x;
 	this->position.y = y;

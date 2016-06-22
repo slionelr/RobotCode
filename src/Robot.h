@@ -34,7 +34,6 @@ public:
 	void Stop();
 	Position GetPosition();
 	Position GetEstPosition();
-	Position GetPositionOnGrid();
 	bool MoveTo(Point dst);
 	bool RoteteTo(Point dst);
 	void SaveParticles();

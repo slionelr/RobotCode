@@ -24,9 +24,9 @@ int main() {
 	ConfigurationManager cnf("parameters.txt");
 
 	// Set the maps
-	Map map = Map(cnf.GetMap(), 1);
+	Map map = Map(cnf.GetMap(), cnf.GetMapResolCM() / cnf.GetGridResolCM());
 	Map grid = map.MapGridConverter(cnf.GetGridResolCM() / cnf.GetMapResolCM());
-	Map nipuha = grid.Nipuha(1);
+	Map nipuha = grid.Nipuha(3);
 
 	// Get the grid locations
 	Position startGridLoc = nipuha.ConvertLocation(cnf.GetStartLocation());
@@ -34,16 +34,26 @@ int main() {
 
 	// Start the robot
 	Robot robot("localhost", 6665, nipuha);
-	robot.SetOdometry(cnf.GetStartLocation());
+	robot.SetOdometry(startGridLoc);
+//	robot.SetOdometry(cnf.GetStartLocation());
 
 	// Plan the path and get the waypoints
 	PathPlanner plan(nipuha.GetGrid(), startGridLoc.GetPoint(), goalGridLoc.GetPoint());
 	WaypointsManager a(nipuha.GetGrid(), startGridLoc.GetPoint());
 	std::vector<Point> wp = a.GetWayPoints(plan.GetPath());
 
+//	std::vector<Position> temp;
 	for (int i=1; i < wp.size(); i++) {
+		std::cout << "Moving to waypoint: #" << i << " ";
+		wp[i].Print();
+
 		robot.MoveTo(wp[i]);
+//		temp.push_back(Position(wp[i].x, wp[i].y));
+//		temp.push_back(map.ConvertLocation(Position(wp[i].x, wp[i].y)));
 	}
+//	map.SaveToFile("waypoints.png", temp);
+//	map.SaveToFile("waypoints.png", temp);
+
 
 //	std::vector<Position> parti;
 //	parti.push_back(Position(20, 60, -0.2));

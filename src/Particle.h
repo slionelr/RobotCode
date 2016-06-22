@@ -20,6 +20,7 @@ private:
 	double ProbByLaser(double* arrLaser, int laserLen, Map map);
 public:
 	Position position;
+//	Particle(Position p);
 	Particle(double x, double y, double o);
 	void Update(double* arrLaser, int laserLen, double dx, double dy, double dO, Map map);
 	int operator==(const Particle &);

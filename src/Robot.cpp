@@ -7,8 +7,9 @@
 
 #include "Robot.h"
 
-#define METER_TO_CM(m) (m * 10)
-#define CM_TO_METER(cm) (cm / 10)
+#define METER_TO_CM(m) (m * 10.0)
+#define CM_TO_METER(cm) (cm / 10.0)
+#define AXIS_REDIRECT(v) (v * -1.0)
 
 #define DEGREE_TOLERANCE 1
 #define MOVE_TOLERANCE 0.1
@@ -27,8 +28,8 @@ Robot::Robot(const std::string ip, int port, Map grid) {
 }
 
 void Robot::SetOdometry(Position p) {
-//	pp->SetOdometry(p.x, p.y, p.o);
-	pp->SetOdometry(CM_TO_METER(p.x), -1 * CM_TO_METER(p.y), DEGREE_2_RAD(p.o));
+	pp->SetOdometry(CM_TO_METER(p.x), AXIS_REDIRECT(CM_TO_METER(p.y)), DEGREE_2_RAD(p.o));
+//	_mngLocation.StartKnownPoint(p);
 }
 
 void Robot::Read() {
@@ -38,9 +39,13 @@ void Robot::Read() {
 	pc->Read();
 
 	// TODO: Set current position - we need to base our position on something else
-	_position.x = pp->GetXPos();
-	_position.y = pp->GetYPos();
-	_position.o = pp->GetYaw();
+//	_position.x = pp->GetXPos();
+//	_position.y = pp->GetYPos();
+//	_position.o = pp->GetYaw();
+
+	_position = Position(METER_TO_CM(pp->GetXPos()),
+						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())),
+						 pp->GetYaw());
 
 	// Calculate deltas
 	dx = _position.x - pOld.x;
@@ -61,32 +66,15 @@ void Robot::Stop() {
 
 Position Robot::GetPosition() {
 	Read();
-	while (pp->GetXPos() == 0 && pp->GetYPos() == 0 && pp->GetYaw() == 0) {
+	while (_position.x == 0 && _position.y == 0 && _position.o == 0) {
 		Read();
 	}
-	Position p = Position(
-			METER_TO_CM(pp->GetXPos()),
-			METER_TO_CM(pp->GetYPos()) * -1,
-//			METER_TO_CM(pp->GetYPos()),
-
-//			pp->GetXPos(),
-//			pp->GetYPos(),
-
-			pp->GetYaw()
-			);
-
-	return p;
+	return _position.Clone();
 }
 
 // TODO: Calculate it with SLAM/LocalizationManager
 Position Robot::GetEstPosition() {
 	return GetPosition();
-}
-
-Position Robot::GetPositionOnGrid() {
-	Position est = GetEstPosition();
-	Position onGrid = _grid.ConvertLocation(est);
-	return onGrid;
 }
 
 bool Robot::MoveTo(Point dst) {
@@ -101,14 +89,19 @@ bool Robot::MoveTo(Point dst) {
 				 "[" << dst.x << "," << dst.y << "]" << std::endl;
 
 	SetSpeed(0.06,0);
-	Position current = GetPositionOnGrid();
-	while((current.x < (dst.x - MOVE_TOLERANCE)) ||
-		  (current.x > (dst.x + MOVE_TOLERANCE)) ||
-		  (current.y < (dst.y - MOVE_TOLERANCE)) ||
-		  (current.y > (dst.y + MOVE_TOLERANCE))) {
-//		Read();
-		current = GetPositionOnGrid();
-		std::cout <<  "Current Position:[" << current.x << "," << current.y << "]" << std::endl;
+//	Position current = GetEstPosition();
+//	while((current.x < (dst.x - MOVE_TOLERANCE)) ||
+//		  (current.x > (dst.x + MOVE_TOLERANCE)) ||
+//		  (current.y < (dst.y - MOVE_TOLERANCE)) ||
+//		  (current.y > (dst.y + MOVE_TOLERANCE))) {
+	while((_position.x < (dst.x - MOVE_TOLERANCE)) ||
+		  (_position.x > (dst.x + MOVE_TOLERANCE)) ||
+		  (_position.y < (dst.y - MOVE_TOLERANCE)) ||
+		  (_position.y > (dst.y + MOVE_TOLERANCE))) {
+		Read();
+//		current = GetEstPosition();
+//		std::cout <<  "Current Position:[" << current.x << "," << current.y << "]" << std::endl;
+		std::cout <<  "Current Position:[" << _position.x << "," << _position.y << "]" << std::endl;
 	}
 	Stop();
 
@@ -117,7 +110,7 @@ bool Robot::MoveTo(Point dst) {
 }
 
 bool Robot::RoteteTo(Point dst) {
-	Position current = GetPositionOnGrid();
+	Position current = GetEstPosition();
 
 	double degree = FindDegreeToRotate(current.GetPoint(), dst);
 	double rotationSide = FindRotationSide(current.o, degree);
@@ -126,10 +119,10 @@ bool Robot::RoteteTo(Point dst) {
 	double minDegreeTolerance = degree - DEGREE_2_RAD(DEGREE_TOLERANCE);
 
 	SetSpeed(0, rotationSide);
-	while((GetPositionOnGrid().o < minDegreeTolerance) || (GetPositionOnGrid().o > maxDegreeTolerance)) {
+	while((GetEstPosition().o < minDegreeTolerance) || (GetEstPosition().o > maxDegreeTolerance)) {
 //		Read();
-		std::cout <<  "Robot:" << GetPositionOnGrid().o << std::endl;
-		Position c = GetPositionOnGrid();
+		std::cout <<  "Robot:" << GetEstPosition().o << std::endl;
+		Position c = GetEstPosition();
 		c.Print();
 	}
 	Stop();
