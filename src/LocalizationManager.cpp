@@ -20,10 +20,8 @@ void LocalizationManager::StartKnownPoint(Position start) {
 	_particles.clear();
 	for (int i=0; i < 15; i++) {
 		Position pr = AddRandomParticle(start);
-		_particles.push_back(Particle(pr.x / 4, pr.y / 4, pr.o));
+		_particles.push_back(Particle(pr.x, pr.y, pr.o));
 	}
-
-	PaticlesImage();
 }
 
 Position LocalizationManager::AddRandomParticle(Position p) {
@@ -99,18 +97,6 @@ std::vector<Position> LocalizationManager::GetParticlesPosition() {
 	}
 	return v;
 }
-
-void LocalizationManager::PaticlesImage() {
-	std::vector<Position> v = GetParticlesPosition();
-	_map.SaveToFile("particles.png", v);
-}
-
-//void LocalizationManager::PaticlesImage(std::vector<Position> v, Map map) {
-//	for (int i=0; i < v.size(); i++) {
-//
-//	}
-//	map.SaveToFile("particles.png", v);
-//}
 
 LocalizationManager::~LocalizationManager() {
 	// TODO Auto-generated destructor stub

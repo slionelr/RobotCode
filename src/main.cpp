@@ -19,8 +19,6 @@
 #include "WaypointsManager.h"
 
 int main() {
-//	std::vector<Particle> vp;
-
 	ConfigurationManager cnf("parameters.txt");
 
 	// Set the maps
@@ -35,47 +33,21 @@ int main() {
 	// Start the robot
 	Robot robot("localhost", 6665, nipuha);
 	robot.SetOdometry(startGridLoc);
-//	robot.SetOdometry(cnf.GetStartLocation());
+	// Print start particles + Robot position
+	robot.SaveParticles(map);
+
+//	std::vector<Particle> vp;
 
 	// Plan the path and get the waypoints
 	PathPlanner plan(nipuha.GetGrid(), startGridLoc.GetPoint(), goalGridLoc.GetPoint());
-	WaypointsManager a(nipuha.GetGrid(), startGridLoc.GetPoint());
-	std::vector<Point> wp = a.GetWayPoints(plan.GetPath());
+	WaypointsManager mngWaypoints(nipuha.GetGrid(), startGridLoc.GetPoint());
+	std::vector<Point> wp = mngWaypoints.GetWayPoints(plan.GetPath());
 
-//	std::vector<Position> temp;
 	for (int i=1; i < wp.size(); i++) {
 		std::cout << "Moving to waypoint: #" << i << " ";
 		wp[i].Print();
-
 		robot.MoveTo(wp[i]);
-//		temp.push_back(Position(wp[i].x, wp[i].y));
-//		temp.push_back(map.ConvertLocation(Position(wp[i].x, wp[i].y)));
 	}
-//	map.SaveToFile("waypoints.png", temp);
-//	map.SaveToFile("waypoints.png", temp);
-
-
-//	std::vector<Position> parti;
-//	parti.push_back(Position(20, 60, -0.2));
-//	parti.push_back(Position(50, 60, 0.4));
-//	parti.push_back(Position(70, 20, 1.1));
-
-//	Position p = Position(20, 60, -0.2);
-//	p.Print();
-//	map.SaveToFile("zprint.png", &parti[0], parti.size());
-//	map.Print(p);
-
-	// Rand particales
-//	int i = 1;
-//	while (true) {
-//		robot.Read();
-//		Position p = robot.GetPosition();
-//		p.Print();
-//		map.SaveToFile("zprint.png", p);
-//
-//		std::cout << "Loop " << i << std::endl;
-//		i++;
-//	}
 
 	return 0;
 }

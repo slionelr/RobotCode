@@ -14,11 +14,14 @@
 #include "MapUtils/Grid.h"
 #include "Position.h"
 
+#include "MapUtils/RGB.h"
+
 class Map {
 private:
 	Grid _grid;
 	double _convResolution;
 	void AddDirctionsToImage(unsigned char* image, std::vector<Position> parti);
+	void Color(unsigned char* image, Position p, RGB color);
 public:
 	Map() {}
 	Map(std::string file, double convResolution);

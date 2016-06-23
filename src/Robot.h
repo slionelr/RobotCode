@@ -36,7 +36,7 @@ public:
 	Position GetEstPosition();
 	bool MoveTo(Point dst);
 	bool RoteteTo(Point dst);
-	void SaveParticles();
+	void SaveParticles(Map map);
 	virtual ~Robot();
 };
 

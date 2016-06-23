@@ -12,7 +12,7 @@
 #include "Point.h"
 #include "Particle.h"
 
-#define MAX_PARTICLES 50
+#define MAX_PARTICLES 30
 
 class LocalizationManager {
 private:
@@ -31,7 +31,6 @@ public:
 	void RemoveParticle(Particle p);
 	Map GetMap();
 	std::vector<Position> GetParticlesPosition();
-	void PaticlesImage();
 	virtual ~LocalizationManager();
 };
 

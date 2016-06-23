@@ -28,8 +28,9 @@ Robot::Robot(const std::string ip, int port, Map grid) {
 }
 
 void Robot::SetOdometry(Position p) {
+	_position = p;
 	pp->SetOdometry(CM_TO_METER(p.x), AXIS_REDIRECT(CM_TO_METER(p.y)), DEGREE_2_RAD(p.o));
-//	_mngLocation.StartKnownPoint(p);
+	_mngLocation.StartKnownPoint(p);
 }
 
 void Robot::Read() {
@@ -66,9 +67,6 @@ void Robot::Stop() {
 
 Position Robot::GetPosition() {
 	Read();
-	while (_position.x == 0 && _position.y == 0 && _position.o == 0) {
-		Read();
-	}
 	return _position.Clone();
 }
 
@@ -89,17 +87,11 @@ bool Robot::MoveTo(Point dst) {
 				 "[" << dst.x << "," << dst.y << "]" << std::endl;
 
 	SetSpeed(0.06,0);
-//	Position current = GetEstPosition();
-//	while((current.x < (dst.x - MOVE_TOLERANCE)) ||
-//		  (current.x > (dst.x + MOVE_TOLERANCE)) ||
-//		  (current.y < (dst.y - MOVE_TOLERANCE)) ||
-//		  (current.y > (dst.y + MOVE_TOLERANCE))) {
 	while((_position.x < (dst.x - MOVE_TOLERANCE)) ||
 		  (_position.x > (dst.x + MOVE_TOLERANCE)) ||
 		  (_position.y < (dst.y - MOVE_TOLERANCE)) ||
 		  (_position.y > (dst.y + MOVE_TOLERANCE))) {
 		Read();
-//		current = GetEstPosition();
 //		std::cout <<  "Current Position:[" << current.x << "," << current.y << "]" << std::endl;
 		std::cout <<  "Current Position:[" << _position.x << "," << _position.y << "]" << std::endl;
 	}
@@ -130,8 +122,13 @@ bool Robot::RoteteTo(Point dst) {
 	return true;
 }
 
-void Robot::SaveParticles() {
-	_mngLocation.PaticlesImage();
+void Robot::SaveParticles(Map map) {
+	std::vector<Position> parti = _mngLocation.GetParticlesPosition();
+	for (int i =0; i < parti.size(); i++) {
+		parti[i] = map.ConvertLocation(parti[i]);
+	}
+	parti.push_back(map.ConvertLocation(_position));
+	map.SaveToFile("particles.map.png", parti);
 }
 
 Robot::~Robot() {
