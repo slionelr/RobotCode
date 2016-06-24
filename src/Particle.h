@@ -11,18 +11,22 @@
 #include <libplayerc++/playerc++.h>
 #include "Map.h"
 
-#define NORMAL 1
+#define NORMAL 1.8
+
+#define LASER_RANGE_DEGREE 240
+#define LASER_RESOLUTION 0.36
 
 class Particle {
 private:
-	double belif;
+	Map _map;
 	double ProbByMov(double dx, double dy, double dO);
-	double ProbByLaser(double* arrLaser, int laserLen, Map map);
+	double ProbByLaser(double* arrLaser, int lasersLen);
 public:
+	double belif;
 	Position position;
-//	Particle(Position p);
-	Particle(double x, double y, double o);
-	void Update(double* arrLaser, int laserLen, double dx, double dy, double dO, Map map);
+	Particle(double x, double y, double o, Map map);
+	void Update(double* arrLaser, int lasersLen, double dx, double dy, double dO);
+	double GetLaserAngle(int index, int lasersLen);
 	int operator==(const Particle &);
 	virtual ~Particle();
 };

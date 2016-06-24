@@ -96,6 +96,10 @@ Map Map::Nipuha(signed rSize) {
 	return Map::Map(nipuha, _convResolution);
 }
 
+int Map::GetValue(int y, int x) {
+	return _grid.GetValue(y, x);
+}
+
 Grid Map::GetGrid() {
 	return _grid;
 }

@@ -8,6 +8,9 @@
 #ifndef ROBOT_H_
 #define ROBOT_H_
 
+// Sets if we are working on the real robot or in the simulation
+//#define REAL
+
 #include <iostream>
 #include <libplayerc++/playerc++.h>
 
@@ -36,6 +39,7 @@ public:
 	Position GetEstPosition();
 	bool MoveTo(Point dst);
 	bool RoteteTo(Point dst);
+	void SaveParticles();
 	void SaveParticles(Map map);
 	virtual ~Robot();
 };

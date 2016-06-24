@@ -12,6 +12,7 @@
 #include "Point.h"
 #include "Particle.h"
 
+#define FORK_COUNT 3
 #define MAX_PARTICLES 30
 
 class LocalizationManager {

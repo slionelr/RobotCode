@@ -5,6 +5,7 @@
  *      Author: user
  */
 
+#include <cmath>
 #include <fstream>
 #include <sstream>
 #include <exception>
@@ -36,7 +37,7 @@ ConfigurationManager::ConfigurationManager(std::string filepath) {
 				} else if (key.compare(START_LOCATION) == 0) {
 					signed x, y, o;
 					iss >> x >> y >> o;
-					_startLocation = Position(x,y,o);
+					_startLocation = Position(x,y,DEGREE_2_RAD(o));
 				} else if (key.compare(GOAL) == 0) {
 					signed x, y;
 					iss >> x >> y;

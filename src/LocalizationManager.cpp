@@ -6,6 +6,7 @@
  */
 
 #include <stdlib.h>
+#include <stdexcept>
 #include "LocalizationManager.h"
 
 LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map grid) {
@@ -18,9 +19,9 @@ LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int las
 
 void LocalizationManager::StartKnownPoint(Position start) {
 	_particles.clear();
-	for (int i=0; i < 15; i++) {
+	for (int i=0; i < FORK_COUNT; i++) {
 		Position pr = AddRandomParticle(start);
-		_particles.push_back(Particle(pr.x, pr.y, pr.o));
+		_particles.push_back(Particle(pr.x, pr.y, pr.o, _map));
 	}
 }
 
@@ -35,22 +36,21 @@ Position LocalizationManager::AddRandomParticle(Position p) {
 	isNegative = rand() % 2;
 	randDeltaX = rand() % deltaRand;
 	if (isNegative) {
-		randDeltaX = randDeltaX * (-1);
+		randDeltaX = randDeltaX * (-1.0);
 	}
 
 	// Random Y
 	isNegative = rand() % 2;
 	randDeltaY = rand() % deltaRand;
 	if (isNegative) {
-		randDeltaY = randDeltaY * (-1);
+		randDeltaY = randDeltaY * (-1.0);
 	}
 
 	// Random Yaw
 	isNegative = rand() % 2;
-//	randDeltaO = ((double)(rand() % (int)(M_PI * 100))) / 100;
-	randDeltaO = ((double)(rand() % (int)(DEGREE_2_RAD(10) * 100))) / 100;
+	randDeltaO = ((double)(rand() % (int)(DEGREE_2_RAD(10.0) * 100.0))) / 100.0;
 	if (isNegative) {
-		randDeltaO = randDeltaO * (-1);
+		randDeltaO = randDeltaO * (-1.0);
 	}
 
 	Position ret = Position(p.x + randDeltaX,
@@ -66,7 +66,8 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 	}
 
 	for (index=0; index < _particles.size(); index++) {
-		_particles[index].Update(_lasersData, _lasersLen, dx, dy, dO, _map);
+		_particles[index].Update(_lasersData, _lasersLen, dx, dy, dO);
+		std::cout << "Particle #" << index << ": " << _particles[index].belif << std::endl;
 	}
 }
 
@@ -78,6 +79,11 @@ void LocalizationManager::AddParticle(Particle p) {
 
 void LocalizationManager::RemoveParticle(Particle p) {
 	unsigned index;
+
+	if (_particles.size() == 1) {
+		throw std::runtime_error("You can't erase the only one particle that is left :(");
+	}
+
 	for (index=0; index < _particles.size(); index++) {
 		if (_particles[index] == p) {
 			break;

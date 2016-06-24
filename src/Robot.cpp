@@ -5,14 +5,15 @@
  *      Author: user
  */
 
+#include <cmath>
 #include "Robot.h"
 
-#define METER_TO_CM(m) (m * 10.0)
-#define CM_TO_METER(cm) (cm / 10.0)
-#define AXIS_REDIRECT(v) (v * -1.0)
+#define M_PI_2 (2 * M_PI)
 
 #define DEGREE_TOLERANCE 1
 #define MOVE_TOLERANCE 0.1
+
+// TODO: Check if the robot is going to get into the obstacle
 
 Robot::Robot(const std::string ip, int port, Map grid) {
 	_position = Position();
@@ -29,7 +30,7 @@ Robot::Robot(const std::string ip, int port, Map grid) {
 
 void Robot::SetOdometry(Position p) {
 	_position = p;
-	pp->SetOdometry(CM_TO_METER(p.x), AXIS_REDIRECT(CM_TO_METER(p.y)), DEGREE_2_RAD(p.o));
+	pp->SetOdometry(CM_TO_METER(p.x), AXIS_REDIRECT(CM_TO_METER(p.y)), p.o);
 	_mngLocation.StartKnownPoint(p);
 }
 
@@ -38,15 +39,24 @@ void Robot::Read() {
 	Position pOld = _position.Clone();
 
 	pc->Read();
+	// DO NOT DELETE THIS LOOP
+	while ((pp->GetXPos() == 0) && (pp->GetYPos() == 0) && (pp->GetYaw() == 0)) {
+		pc->Read();
+	}
 
-	// TODO: Set current position - we need to base our position on something else
-//	_position.x = pp->GetXPos();
-//	_position.y = pp->GetYPos();
-//	_position.o = pp->GetYaw();
-
+#ifdef REAL
+	double realO = pp->GetYaw();
+	if (realO > M_PI) {
+		realO = realO - M_PI_2;
+	}
+	_position = Position(METER_TO_CM(pp->GetXPos()),
+						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())),
+						 realO);
+#else
 	_position = Position(METER_TO_CM(pp->GetXPos()),
 						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())),
 						 pp->GetYaw());
+#endif
 
 	// Calculate deltas
 	dx = _position.x - pOld.x;
@@ -120,6 +130,12 @@ bool Robot::RoteteTo(Point dst) {
 	Stop();
 
 	return true;
+}
+
+void Robot::SaveParticles() {
+	std::vector<Position> parti = _mngLocation.GetParticlesPosition();
+	parti.push_back(_position);
+	_grid.SaveToFile("particles.grid.png", parti);
 }
 
 void Robot::SaveParticles(Map map) {

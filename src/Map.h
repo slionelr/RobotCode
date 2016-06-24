@@ -16,6 +16,10 @@
 
 #include "MapUtils/RGB.h"
 
+#define METER_TO_CM(m) (m * 10.0)
+#define CM_TO_METER(cm) (cm / 10.0)
+#define AXIS_REDIRECT(v) (v * -1.0)
+
 class Map {
 private:
 	Grid _grid;
@@ -27,6 +31,7 @@ public:
 	Map(std::string file, double convResolution);
 	Map(Grid grid, double resolution);
 	Map Nipuha(int size);
+	int GetValue(int y, int x);
 	Grid GetGrid();
 	double GetResolution();
 	Map MapGridConverter(double convResolution);
