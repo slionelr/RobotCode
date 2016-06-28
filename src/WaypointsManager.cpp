@@ -20,6 +20,7 @@ std::vector<Point> WaypointsManager::GetWayPoints(std::string route) {
 	int previusDirection = -1;
 	int countCurrRoute = 0;
 	int currDirection = 0;
+	bool isSecondChange = false;
 	int currX = _start.x;
 	int currY = _start.y;
 	vector<Point> vp;
@@ -47,12 +48,26 @@ std::vector<Point> WaypointsManager::GetWayPoints(std::string route) {
 		currDirection = atoi(&c);
 
 		if (previusDirection != currDirection) {
-			vp.push_back(Point(currX, currY));
+			if(isSecondChange){
+				vp.push_back(Point(currX, currY));
+				isSecondChange=false;
+			}
+			else{
+				if(i != route.size() - 1){
+					int nextIndex = i+1;
+					if(currDirection != atoi(&route.at(nextIndex))){
+						isSecondChange = true;
+					}
+					else{
+						vp.push_back(Point(currX, currY));
+					}
+				}
+			}
 			countCurrRoute = 0;
 			previusDirection = currDirection;
 		}
 		else if(previusDirection == currDirection){
-			if (countCurrRoute == 3){
+			if (countCurrRoute == 4){
 				vp.push_back(Point(currX, currY));
 				countCurrRoute = 0;
 			}
@@ -104,6 +119,9 @@ std::vector<Point> WaypointsManager::GetWayPoints(std::string route) {
 
 		map[currX][currY] = 3;
 	} // End loop
+
+	//Destination Point
+	vp.push_back(Point(currX, currY));
 
 	for (int i = 0; i < vp.size(); ++i) {
 		vp[i].Print();

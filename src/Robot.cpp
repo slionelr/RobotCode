@@ -10,10 +10,12 @@
 
 #define M_PI_2 (2 * M_PI)
 
-#define DEGREE_TOLERANCE 1
-#define MOVE_TOLERANCE 0.1
+#define METER_TO_CM(m) (m * 10.0)
+#define CM_TO_METER(cm) (cm / 10.0)
+#define AXIS_REDIRECT(v) (v * -1.0)
 
-// TODO: Check if the robot is going to get into the obstacle
+#define DEGREE_TOLERANCE 1
+#define MOVE_TOLERANCE 1
 
 Robot::Robot(const std::string ip, int port, Map grid) {
 	_position = Position();
@@ -30,8 +32,18 @@ Robot::Robot(const std::string ip, int port, Map grid) {
 
 void Robot::SetOdometry(Position p) {
 	_position = p;
-	pp->SetOdometry(CM_TO_METER(p.x), AXIS_REDIRECT(CM_TO_METER(p.y)), p.o);
-	_mngLocation.StartKnownPoint(p);
+	pp->SetOdometry(CM_TO_METER(p.x), AXIS_REDIRECT(CM_TO_METER(p.y)), DEGREE_2_RAD(p.o));
+
+	pc->Read();
+	while((pp->GetXPos() == 0) && (pp-> GetYPos() == 0) && (pp->GetYaw()==0)){
+		pc->Read();
+	}
+
+	double x = pp->GetXPos();
+	double y = pp->GetYPos();
+	std::cout << "After SetOdometry: [X: " << x << "][Y: " << y << "]" << std::endl;
+
+//	_mngLocation.StartKnownPoint(p);
 }
 
 void Robot::Read() {
@@ -39,24 +51,28 @@ void Robot::Read() {
 	Position pOld = _position.Clone();
 
 	pc->Read();
-	// DO NOT DELETE THIS LOOP
-	while ((pp->GetXPos() == 0) && (pp->GetYPos() == 0) && (pp->GetYaw() == 0)) {
+	while((pp->GetXPos() == 0) && (pp-> GetYPos() == 0) && (pp->GetYaw()==0)){
 		pc->Read();
 	}
 
-#ifdef REAL
-	double realO = pp->GetYaw();
-	if (realO > M_PI) {
-		realO = realO - M_PI_2;
+	// TODO: Set current position - we need to base our position on something else
+//	_position.x = pp->GetXPos();
+//	_position.y = pp->GetYPos();
+//	_position.o = pp->GetYaw();
+
+//#ifdef REAL
+	double o = pp->GetYaw();
+	if (o > M_PI) {
+		o = o - M_PI_2;
 	}
-	_position = Position(METER_TO_CM(pp->GetXPos()),
-						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())),
-						 realO);
-#else
-	_position = Position(METER_TO_CM(pp->GetXPos()),
-						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())),
-						 pp->GetYaw());
-#endif
+	_position = Position(METER_TO_CM(pp->GetXPos()) - 36,
+						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())) + 9,
+						 o);
+//#else
+//	_position = Position(METER_TO_CM(pp->GetXPos()),
+//						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())),
+//						 pp->GetYaw());
+//#endif
 
 	// Calculate deltas
 	dx = _position.x - pOld.x;
@@ -96,7 +112,7 @@ bool Robot::MoveTo(Point dst) {
 	std::cout << "Starting Moving To: " <<
 				 "[" << dst.x << "," << dst.y << "]" << std::endl;
 
-	SetSpeed(0.06,0);
+	SetSpeed(0.2,0);
 	while((_position.x < (dst.x - MOVE_TOLERANCE)) ||
 		  (_position.x > (dst.x + MOVE_TOLERANCE)) ||
 		  (_position.y < (dst.y - MOVE_TOLERANCE)) ||
@@ -115,6 +131,7 @@ bool Robot::RoteteTo(Point dst) {
 	Position current = GetEstPosition();
 
 	double degree = FindDegreeToRotate(current.GetPoint(), dst);
+	std::cout << "Degree rotating: " << degree << std::endl;
 	double rotationSide = FindRotationSide(current.o, degree);
 
 	double maxDegreeTolerance = degree + DEGREE_2_RAD(DEGREE_TOLERANCE);
@@ -130,12 +147,6 @@ bool Robot::RoteteTo(Point dst) {
 	Stop();
 
 	return true;
-}
-
-void Robot::SaveParticles() {
-	std::vector<Position> parti = _mngLocation.GetParticlesPosition();
-	parti.push_back(_position);
-	_grid.SaveToFile("particles.grid.png", parti);
 }
 
 void Robot::SaveParticles(Map map) {
