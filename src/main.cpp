@@ -32,9 +32,9 @@ int main() {
 
 	// Start the robot
 #ifdef REAL
-	Robot robot("10.10.245.63", 6665, nipuha);
+	Robot robot("10.10.245.63", 6665, nipuha, map);
 #else
-	Robot robot("localhost", 6665, nipuha);
+	Robot robot("localhost", 6665, nipuha, map);
 #endif
 	robot.SetOdometry(startGridLoc);
 	// Print start particles + Robot position
@@ -51,7 +51,7 @@ int main() {
 	// TODO: Handle situation when there is no path
 	std::vector<Point> wp = mngWaypoints.GetWayPoints(path);
 
-	for (int i=1; i < wp.size(); i++) {
+	for (int i=0; i < wp.size(); i++) {
 		std::cout << "Moving to waypoint: #" << i << " ";
 		wp[i].Print();
 		robot.MoveTo(wp[i]);

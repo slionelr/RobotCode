@@ -9,7 +9,7 @@
 #define ROBOT_H_
 
 // Sets if we are working on the real robot or in the simulation
-//#define REAL
+#define REAL
 
 #include <iostream>
 #include <libplayerc++/playerc++.h>
@@ -31,7 +31,7 @@ private:
 	double FindRotationSide(double srcYaw, double dstYaw);
 	double FindDegreeToRotate(Point src, Point dst/*, double Yaw*/);
 public:
-	Robot(const std::string ip, int port, Map grid);
+	Robot(const std::string ip, int port, Map grid, Map map);
 	void SetOdometry(Position p);
 	void SetSpeed(double speed, double yaw);
 	void Stop();

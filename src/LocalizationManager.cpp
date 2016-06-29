@@ -9,12 +9,12 @@
 #include <stdexcept>
 #include "LocalizationManager.h"
 
-LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map grid) {
+LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map) {
 	//_particles(); // Already initialized at declaration
 	_lp = arrLaser;
 	_lasersLen = lasersLen;
 	_lasersData = (double*)malloc(lasersLen * sizeof(double));
-	_map = grid;
+	_map = map;
 }
 
 void LocalizationManager::StartKnownPoint(Position start) {
@@ -24,10 +24,10 @@ void LocalizationManager::StartKnownPoint(Position start) {
 	_particles.push_back(Particle(start.x, start.y, start.o, _map));
 
 	// Add some random
-	for (int i=0; i < FORK_COUNT; i++) {
-		Position pr = AddRandomParticle(start);
-		_particles.push_back(Particle(pr.x, pr.y, pr.o, _map));
-	}
+//	for (int i=0; i < FORK_COUNT; i++) {
+//		Position pr = AddRandomParticle(start);
+//		_particles.push_back(Particle(pr.x, pr.y, pr.o, _map));
+//	}
 }
 
 Position LocalizationManager::AddRandomParticle(Position p) {

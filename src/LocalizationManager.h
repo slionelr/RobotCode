@@ -26,7 +26,7 @@ private:
 	Position AddRandomParticle(Position p);
 public:
 	LocalizationManager() {}
-	LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map grid);
+	LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map);
 	void StartKnownPoint(Position start);
 	void Update(double dx, double dy, double dO);
 	void AddParticle(Particle p);

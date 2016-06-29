@@ -18,6 +18,11 @@
 
 class Particle {
 private:
+//	static int _updateId; // TODO: DELETE
+	int _updateId; // TODO: DELETE
+	static int _id; // TODO: DELETE ID
+	int _myId; // TODO: DELETE
+
 	Map _map;
 	void init(double x, double y, double o, Map map);
 	double ProbByMov(double dx, double dy, double dO);

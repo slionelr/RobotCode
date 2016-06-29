@@ -67,7 +67,7 @@ public:
 		}
 
 		if (isCloseToObstacle) {
-			level = level + 7;
+			level = level + 5;
 		}
 
 	}

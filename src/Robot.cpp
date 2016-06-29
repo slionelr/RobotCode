@@ -11,16 +11,16 @@
 #define M_PI_2 (2 * M_PI)
 
 #define DEGREE_TOLERANCE 1
-#define MOVE_TOLERANCE 0.1
+#define MOVE_TOLERANCE 1.0
 
 // TODO: Check if the robot is going to get into the obstacle
 
-Robot::Robot(const std::string ip, int port, Map grid) {
+Robot::Robot(const std::string ip, int port, Map grid, Map map) {
 	_position = Position();
 	pc = new PlayerCc::PlayerClient(ip, port);
 	pp = new PlayerCc::Position2dProxy(pc, 0);
 	lp = new PlayerCc::LaserProxy(pc, 0);
-	_mngLocation = LocalizationManager(lp, LASER_COUNT, grid);
+	_mngLocation = LocalizationManager(lp, LASER_COUNT, map);
 
 	_grid = grid;
 
@@ -46,9 +46,11 @@ void Robot::Read() {
 	if (realO > M_PI) {
 		realO = realO - M_PI_2;
 	}
-	_position = Position(METER_TO_CM(pp->GetXPos()),
-						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())),
+	_position = Position(METER_TO_CM(pp->GetXPos()) - 36,
+						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())) + 9,
+//						 realO + 0.1164469);
 						 realO);
+
 #else
 	_position = Position(METER_TO_CM(pp->GetXPos()),
 						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())),
@@ -88,7 +90,7 @@ bool Robot::MoveTo(Point dst) {
 	std::cout << "Starting Moving To: " <<
 				 "[" << dst.x << "," << dst.y << "]" << std::endl;
 
-	SetSpeed(0.06,0);
+	SetSpeed(0.2,0);
 	while((_position.x < (dst.x - MOVE_TOLERANCE)) ||
 		  (_position.x > (dst.x + MOVE_TOLERANCE)) ||
 		  (_position.y < (dst.y - MOVE_TOLERANCE)) ||
@@ -216,10 +218,10 @@ double Robot::FindRotationSide(double srcYaw, double dstYaw)
 
 	if(leftCost < rightCost) {
 		// Turn Left
-		return 0.1;
+		return 0.15;
 	} else {
 		// Turn Right
-		return -0.1;
+		return -0.15;
 	}
 }
 
