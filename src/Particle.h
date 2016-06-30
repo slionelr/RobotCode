@@ -18,21 +18,20 @@
 
 class Particle {
 private:
-//	static int _updateId; // TODO: DELETE
-	int _updateId; // TODO: DELETE
 	static int _id; // TODO: DELETE ID
 	int _myId; // TODO: DELETE
 
 	Map _map;
 	void init(double x, double y, double o, Map map);
 	double ProbByMov(double dx, double dy, double dO);
-	double ProbByLaser(double* arrLaser, int lasersLen);
+	double ProbByLaser(double* arrLaser, int lasersLen, double* avDisMis, double* avAngleMis);
 public:
+	static int _updateId; // TODO: DELETE
 	double belif;
 	Position position;
 //	Particle();
 	Particle(double x, double y, double o, Map map);
-	void Update(double* arrLaser, int lasersLen, double dx, double dy, double dO);
+	void Update(double* arrLaser, int lasersLen, double dx, double dy, double dO, double* avDisMis, double* avAngleMis);
 	double GetLaserAngle(int index, int lasersLen);
 	int operator==(const Particle &);
 	virtual ~Particle();

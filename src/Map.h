@@ -20,6 +20,8 @@
 #define CM_TO_METER(cm) (cm / 10.0)
 #define AXIS_REDIRECT(v) (v * -1.0)
 
+#define M_2PI_ (2 * M_PI)
+
 class Map {
 private:
 	Grid _grid;

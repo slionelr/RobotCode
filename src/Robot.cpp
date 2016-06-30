@@ -8,10 +8,8 @@
 #include <cmath>
 #include "Robot.h"
 
-#define M_PI_2 (2 * M_PI)
-
 #define DEGREE_TOLERANCE 1
-#define MOVE_TOLERANCE 1.0
+#define MOVE_TOLERANCE 1
 
 // TODO: Check if the robot is going to get into the obstacle
 
@@ -44,7 +42,7 @@ void Robot::Read() {
 #ifdef REAL
 	double realO = pp->GetYaw();
 	if (realO > M_PI) {
-		realO = realO - M_PI_2;
+		realO = realO - M_2PI_;
 	}
 	_position = Position(METER_TO_CM(pp->GetXPos()) - 36,
 						 AXIS_REDIRECT(METER_TO_CM(pp->GetYPos())) + 9,
@@ -125,9 +123,10 @@ bool Robot::RoteteTo(Point dst) {
 	SetSpeed(0, rotationSide);
 	while((GetEstPosition().o < minDegreeTolerance) || (GetEstPosition().o > maxDegreeTolerance)) {
 //		Read();
-		std::cout <<  "Robot:" << GetEstPosition().o << std::endl;
+//		std::cout <<  "Robot:" << GetEstPosition().o << std::endl;
 		Position c = GetEstPosition();
 		c.Print();
+		std::cout << std::endl;
 	}
 	Stop();
 

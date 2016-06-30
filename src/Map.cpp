@@ -220,25 +220,25 @@ void Map::AddDirctionsToImage(unsigned char* image, std::vector<Position> parti)
 		Position p = parti[index];
 		Color(image, p, RED);
 	}
-//	Color(image, parti[index], BLUE);
+	Color(image, parti[index], BLUE);
 }
 
 void Map::Color(unsigned char* image, Position p, RGB color) {
 	unsigned width = this->GetWidth();
 	int pixelIndex;
-	bool withYaw = false;
+	bool withYaw = true;
 
-//	if (p.x != 0 && p.y != 0) {
-//		for (int y=0-DOT_RADIUS; y < DOT_RADIUS; y++) {
-//			for (int x=0-DOT_RADIUS; x < DOT_RADIUS; x++) {
-//				pixelIndex = ((int)p.y + y) * width * 4 + ((int)p.x + x) * 4;
-//				image[pixelIndex + 0] = (color & RED)	* 255;
-//				image[pixelIndex + 1] = (color & GREEN)	* 255;
-//				image[pixelIndex + 2] = (color & BLUE)	* 255;
-//				image[pixelIndex + 3] = 255;
-//			}
-//		}
-//	}
+	if (p.x != 0 && p.y != 0) {
+		for (int y=0-DOT_RADIUS; y < DOT_RADIUS; y++) {
+			for (int x=0-DOT_RADIUS; x < DOT_RADIUS; x++) {
+				pixelIndex = ((int)p.y + y) * width * 4 + ((int)p.x + x) * 4;
+				image[pixelIndex + 0] = (color & RED)	* 255;
+				image[pixelIndex + 1] = (color & GREEN)	* 255;
+				image[pixelIndex + 2] = (color & BLUE)	* 255;
+				image[pixelIndex + 3] = 255;
+			}
+		}
+	}
 	pixelIndex = ((int)p.y) * width * 4 + ((int)p.x) * 4;
 	image[pixelIndex + 0] = (color & RED)	* 255;
 	image[pixelIndex + 1] = (color & GREEN)	* 255;
@@ -259,23 +259,28 @@ void Map::Color(unsigned char* image, Position p, RGB color) {
 		//(Y)
 		double tx = 0;
 		double ty = 0;
-		double addX = sin(p.o);
-		double addY = cos(p.o) * (-1.0);
+		double addX = cos(p.o);
+		double addY = sin(p.o);
+		addY = AXIS_REDIRECT(addY);
 		int nx = 0;
 		int ny = 0;
 
 		while ((abs(nx) < DIRECTION_LIMIT) && (abs(ny) < DIRECTION_LIMIT)) {
-			pixelIndex = (int)(p.y + ny) * width * 4 + (int)(p.x + nx) * 4;
-			image[pixelIndex + 0] = (color & RED)	* 255;
-			image[pixelIndex + 1] = (color & GREEN)	* 255;
-			image[pixelIndex + 2] = (color & BLUE)	* 255;
-			image[pixelIndex + 3] = 255;
+			if ((p.y + ny >= GetHeight()) || (p.x + nx >= GetWidth())) {
+				break;
+			} else {
+				pixelIndex = (int)(p.y + ny) * width * 4 + (int)(p.x + nx) * 4;
+				image[pixelIndex + 0] = (color & RED)	* 255;
+				image[pixelIndex + 1] = (color & GREEN)	* 255;
+				image[pixelIndex + 2] = (color & BLUE)	* 255;
+				image[pixelIndex + 3] = 255;
 
-			tx+=addX;
-			ty+=addY;
+				tx+=addX;
+				ty+=addY;
 
-			nx = tx;
-			ny = ty;
+				nx = tx;
+				ny = ty;
+			}
 		}
 	}
 }

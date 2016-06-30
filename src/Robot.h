@@ -9,7 +9,7 @@
 #define ROBOT_H_
 
 // Sets if we are working on the real robot or in the simulation
-#define REAL
+//#define REAL
 
 #include <iostream>
 #include <libplayerc++/playerc++.h>

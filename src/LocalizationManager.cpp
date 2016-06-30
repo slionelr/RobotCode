@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <stdexcept>
+#include <cmath>
 #include "LocalizationManager.h"
 
 LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map) {
@@ -71,8 +72,37 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 	}
 
 	double bestBelif = 0.0;
-	for (index=0; index < _particles.size(); index++) {
-		_particles[index].Update(_lasersData, _lasersLen, dx, dy, dO);
+	// The particles vector size before we add more - this probebly solves a problem
+	int partiVecSize = _particles.size();
+	for (index=0; index < partiVecSize; index++) {
+//		Particle particle = _particles[index];
+		double misDistance, misAngle;
+//		particle.Update(_lasersData, _lasersLen, dx, dy, dO, &misDistance, &misAngle);
+		_particles[index].Update(_lasersData, _lasersLen, dx, dy, dO, &misDistance, &misAngle);
+
+		// Try to put new particles with correction to the mistake that was given above
+//		if (_particles[index].belif > 0.5)
+		{
+			if (METER_TO_CM(misDistance) < 3.0) {
+				Position pos = _particles[index].position;
+				double misX = misDistance * cos(misAngle);
+				double misY = misDistance * sin(misAngle);
+				misX = METER_TO_CM(misX);
+				misY = AXIS_REDIRECT(METER_TO_CM(misY));
+
+				misX = misX * 0.6;
+				misY = misY * 0.6;
+
+				double ryaw = rand() % 10 - 5.0;
+				ryaw = DEGREE_2_RAD(ryaw);
+				ryaw = ryaw / 2.0;
+
+				AddParticle(Particle(pos.x + misX, pos.y + misY, pos.o + ryaw, _map));
+				AddParticle(Particle(pos.x + misX, pos.y + misY, pos.o - ryaw, _map));
+			}
+		}
+
+		// Check best particle
 		if (bestBelif < _particles[index].belif) {
 			_bestIndex = index;
 			bestBelif = _particles[index].belif;
@@ -83,6 +113,8 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 	}
 
 	// TODO: Add and remove particles depends on the belif
+
+	Particle::_updateId++;
 }
 
 void LocalizationManager::AddParticle(Particle p) {
