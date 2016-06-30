@@ -24,14 +24,13 @@ private:
 	Map _map;
 	void init(double x, double y, double o, Map map);
 	double ProbByMov(double dx, double dy, double dO);
-	double ProbByLaser(double* arrLaser, int lasersLen, double* avDisMis, double* avAngleMis);
+	double ProbByLaser(double* arrLaser, int lasersLen, Position* estimated);
 public:
 	static int _updateId; // TODO: DELETE
 	double belif;
 	Position position;
-//	Particle();
 	Particle(double x, double y, double o, Map map);
-	void Update(double* arrLaser, int lasersLen, double dx, double dy, double dO, double* avDisMis, double* avAngleMis);
+	Position Update(double* arrLaser, int lasersLen, double dx, double dy, double dO);
 	double GetLaserAngle(int index, int lasersLen);
 	int operator==(const Particle &);
 	virtual ~Particle();
