@@ -22,6 +22,7 @@ Particle::Particle(double x, double y, double o, Map map) {
 }
 
 void Particle::init(double x, double y, double o, Map map) {
+	this->first = true;
 //	this->_updateId = 0;
 	this->_myId = _id;
 	++_id;
@@ -198,7 +199,7 @@ double Particle::ProbByLaser(double* arrLaser, int lasersLen, Position* estimate
 //	*estimated = Position(position.x + mistakeX, position.y + mistakeY, position.o);
 //	*estimated = Position(position.x - mistakeX, position.y - mistakeY, position.o);
 
-	*estimated = Position(mistakeX, mistakeY, position.o);
+	*estimated = Position(mistakeX, mistakeY, 0.0);
 
 	std::stringstream ss;
 	ss << "update_" << Particle::_updateId << "__obsticles.parti." << _myId << ".png";

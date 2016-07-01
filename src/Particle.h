@@ -27,6 +27,7 @@ private:
 	double ProbByMov(double dx, double dy, double dO);
 	double ProbByLaser(double* arrLaser, int lasersLen, Position* estimated);
 public:
+	bool first;
 	int _myId; // TODO: DELETE
 	static int _updateId; // TODO: DELETE
 	double belif;

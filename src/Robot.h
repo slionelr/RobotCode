@@ -28,6 +28,9 @@ private:
 	void Read();
 	double FindRotationSide(double srcYaw, double dstYaw);
 	double FindDegreeToRotate(Point src, Point dst/*, double Yaw*/);
+	double offsetX;
+	double offsetY;
+	double offsetO;
 public:
 	Robot(const std::string ip, int port, Map grid, Map map);
 	void SetOdometry(Position p);

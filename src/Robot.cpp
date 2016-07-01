@@ -22,6 +22,10 @@ Robot::Robot(const std::string ip, int port, Map grid, Map map) {
 
 	_grid = grid;
 
+	offsetX = 0.0;
+	offsetY = 0.0;
+	offsetO = 0.0;
+
 	// We need this so that real robot will activate its motor
 	pp->SetMotorEnable(true);
 }
@@ -71,7 +75,16 @@ Position Robot::GetPosition() {
 
 // TODO: Calculate it with SLAM/LocalizationManager
 Position Robot::GetEstPosition() {
-	return GetPosition();
+	Position tmp = GetPosition();
+	tmp.x = tmp.x + offsetX;
+	tmp.y = tmp.y + offsetY;
+	tmp.o = tmp.o + offsetO;
+
+	if (tmp.o > M_PI) {
+		tmp.o = tmp.o - (2 * M_PI);
+	}
+
+	return tmp;
 //	return _mngLocation.GetLocalizationPosition();
 }
 
@@ -116,9 +129,12 @@ bool Robot::MoveTo(Point dst) {
 	std::cout << std::endl;
 
 	Position toSet = _mngLocation.GetLocalizationPosition();
-	_position = toSet;
+//	_position = toSet;
 //	SetOdometry(toSet); - bad thing: it calls some stuff that we dont whant to call
-	pp->SetOdometry(CM_TO_METER(toSet.x), AXIS_REDIRECT(CM_TO_METER(toSet.y)), toSet.o);
+//	pp->SetOdometry(CM_TO_METER(toSet.x), AXIS_REDIRECT(CM_TO_METER(toSet.y)), toSet.o);
+	offsetX = toSet.x - _position.x;
+	offsetY = toSet.y - _position.y;
+	offsetO = toSet.o - _position.o;
 
 	return true;
 }
@@ -133,12 +149,14 @@ bool Robot::RoteteTo(Point dst) {
 	double minDegreeTolerance = degree - DEGREE_2_RAD(DEGREE_TOLERANCE);
 
 	SetSpeed(0, rotationSide);
-	while((GetEstPosition().o < minDegreeTolerance) || (GetEstPosition().o > maxDegreeTolerance)) {
+	Position c = GetEstPosition();
+	while((c.o < minDegreeTolerance) || (c.o > maxDegreeTolerance)) {
 //		Read();
-//		std::cout <<  "Robot:" << GetEstPosition().o << std::endl;
-//		Position c = GetEstPosition();
-//		c.Print();
-//		std::cout << std::endl;
+		std::cout <<  "Robot position: ";
+		c.Print();
+		std::cout << std::endl;
+
+		c = GetEstPosition();
 	}
 	Stop();
 
