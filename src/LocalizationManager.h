@@ -21,16 +21,18 @@ private:
 	double* _lasersData;
 	int _lasersLen;
 	Map _map;
-	std::vector<Particle> _particles;
+
+	Particle* _particles[MAX_PARTICLES];
+	int _particlesLength;
 	int _bestIndex;
 	Position AddRandomParticle(Position p);
+	void AddParticle(Particle* p);
+	void RemoveParticle(int index);
 public:
 	LocalizationManager() {}
 	LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map);
 	void StartKnownPoint(Position start);
 	void Update(double dx, double dy, double dO);
-	void AddParticle(Particle p);
-	void RemoveParticle(Particle p);
 	Map GetMap();
 	std::vector<Position> GetParticlesPosition();
 	Position GetLocalizationPosition();

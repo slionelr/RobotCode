@@ -11,7 +11,11 @@
 #include "LocalizationManager.h"
 
 LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map) {
-	//_particles(); // Already initialized at declaration
+	_particlesLength = 0;
+	for (int i=0; i < MAX_PARTICLES; i++) {
+		_particles[i] = NULL;
+	}
+
 	_lp = arrLaser;
 	_lasersLen = lasersLen;
 	_lasersData = (double*)malloc(lasersLen * sizeof(double));
@@ -19,10 +23,8 @@ LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int las
 }
 
 void LocalizationManager::StartKnownPoint(Position start) {
-	_particles.clear();
-
 	// Add robot start position
-	_particles.push_back(Particle(start.x, start.y, start.o, _map));
+	AddParticle(new Particle(start.x, start.y, start.o, _map));
 
 	// Add some random
 //	for (int i=0; i < FORK_COUNT; i++) {
@@ -73,55 +75,85 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 
 	double bestBelif = 0.0;
 	// The particles vector size before we add more - this probebly solves a problem
-	int partiVecSize = _particles.size();
+	int partiVecSize = _particlesLength;
+	bool* partiDeleteParti = (bool*)malloc(partiVecSize * sizeof(bool));
 	for (index=0; index < partiVecSize; index++) {
-		Position mistake = _particles[index].Update(_lasersData, _lasersLen, dx, dy, dO);
+		if (_particles[index] == NULL) {
+			continue;
+		}
+
+		Position mistake = _particles[index]->Update(_lasersData, _lasersLen, dx, dy, dO);
 
 		// Try to put new particles with correction to the mistake that was given above
-//		if (_particles[index].belif > 0.5)
-		{
-			double ryaw = rand() % 10 - 5.0;
-			ryaw = DEGREE_2_RAD(ryaw);
-			ryaw = ryaw / 2.0;
+//		if (_particles[index]->belif > 0.5)
+//		{
+			// TODO: TEST LOOP - delete after finish testing
+			for (int k=2; k <= 2; k++){
+//			double ryaw = rand() % 30 - 15.0;
+//			ryaw = DEGREE_2_RAD(ryaw);
+//			ryaw = ryaw / 2.0;
 
-			AddParticle(Particle(mistake.x, mistake.y, mistake.o + ryaw, _map));
-			AddParticle(Particle(mistake.x, mistake.y, mistake.o - ryaw, _map));
-		}
+			double ryaw = 2.0;
+			ryaw = k * ryaw;
+			ryaw = DEGREE_2_RAD(ryaw);
+
+			Particle* a = new Particle(mistake.x, mistake.y, mistake.o + ryaw, _map);
+			std::cout << "New particle at: ";
+			a->position.Print();
+			std::cout << std::endl;
+
+			Particle* b = new Particle(mistake.x, mistake.y, mistake.o - ryaw, _map);
+			std::cout << "New particle at: ";
+			b->position.Print();
+			std::cout << std::endl;
+
+			AddParticle(a);
+			AddParticle(b);
+			}
+
+			partiDeleteParti[index] = false;
+//		} else {
+//			partiDeleteParti[index] = true;
+//		}
 
 		// Check best particle
-		if (bestBelif < _particles[index].belif) {
+		if (bestBelif < _particles[index]->belif) {
 			_bestIndex = index;
-			bestBelif = _particles[index].belif;
+			bestBelif = _particles[index]->belif;
 		}
 		std::cout << "Particle #" << index << ": ";
-		_particles[index].position.Print();
-		std::cout << " " << _particles[index].belif << std::endl;
+		_particles[index]->position.Print();
+		std::cout << " " << _particles[index]->belif << std::endl;
 	}
 
-	// TODO: Add and remove particles depends on the belif
+	// Remove particles from end to start
+	for (; index >=0; index--) {
+		if (partiDeleteParti[index]) {
+			RemoveParticle(index);
+		}
+	}
 
 	Particle::_updateId++;
 }
 
-void LocalizationManager::AddParticle(Particle p) {
-	if (_particles.size() < MAX_PARTICLES) {
-		_particles.push_back(p);
+void LocalizationManager::AddParticle(Particle* p) {
+	if (_particlesLength < MAX_PARTICLES) {
+		for (int i=0; i < _particlesLength + 1; i++) {
+			if (_particles[i] == NULL) {
+				_particles[_particlesLength] = p;
+			}
+		}
+		_particlesLength++;
 	}
 }
 
-void LocalizationManager::RemoveParticle(Particle p) {
-	unsigned index;
-
-	if (_particles.size() == 1) {
-		throw std::runtime_error("You can't erase the only one particle that is left :(");
+void LocalizationManager::RemoveParticle(int index) {
+	// IF its the last particle keep it alive
+	if (_particlesLength == 0) {
+		return;
 	}
-
-	for (index=0; index < _particles.size(); index++) {
-		if (_particles[index] == p) {
-			break;
-		}
-	}
-	_particles.erase(_particles.begin() + index);
+	_particles[index] = NULL;
+	_particlesLength--;
 }
 
 Map LocalizationManager::GetMap() {
@@ -130,14 +162,14 @@ Map LocalizationManager::GetMap() {
 
 std::vector<Position> LocalizationManager::GetParticlesPosition() {
 	std::vector<Position> v;
-	for (int i=0; i < _particles.size(); i++) {
-		v.push_back(_particles[i].position);
+	for (int i=0; i < _particlesLength; i++) {
+		v.push_back(_particles[i]->position);
 	}
 	return v;
 }
 
 Position LocalizationManager::GetLocalizationPosition() {
-	return _particles[_bestIndex].position;
+	return _particles[_bestIndex]->position;
 }
 
 LocalizationManager::~LocalizationManager() {

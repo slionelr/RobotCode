@@ -83,12 +83,12 @@ double Particle::ProbByLaser(double* arrLaser, int lasersLen, Position* estimate
 	double mr_Counter = 0;
 
 	double disCheckCounter = 0.0;
+	double adm = 0.0;
+	double aam = 0.0;
 
 	// TODO: DELETE TEMP IMAGE SAVE
 	std::vector<Position> obs;
 //	std::vector<Position> esti;
-	double avgX = 0.0;
-	double avgY = 0.0;
 
 	for (int i=0; i < lasersLen; i++) {
 		double obsDistance = arrLaser[i];
@@ -145,9 +145,9 @@ double Particle::ProbByLaser(double* arrLaser, int lasersLen, Position* estimate
 //											gridTNP.x - x,
 //											gridTNP.y - y,
 //											position.o));
-									adm = adm + ni;
+									adm = adm + abs(ni);
 									aam = aam + i;
-									std::cout << "There is a obstacle in " << ni << " mistake." << std::endl;
+//									std::cout << "There is a obstacle in " << ni << " mistake." << std::endl;
 									break;
 								}
 							}
@@ -164,9 +164,19 @@ double Particle::ProbByLaser(double* arrLaser, int lasersLen, Position* estimate
 //		esti[i].Print();
 //		std::cout << std::endl;
 //	}
-	avgX = avgX / disCheckCounter;
-	avgY = avgY / disCheckCounter;
-	*estimated = Position(avgX, avgY, position.o);
+
+	adm = adm / disCheckCounter;
+	aam = aam / disCheckCounter;
+	aam = DEGREE_2_RAD(aam);
+	aam = aam - M_2PI_;
+
+	double mistakeX = adm * cos(position.o);
+	double mistakeY = adm * sin(position.o);
+
+	mistakeX = METER_TO_CM(mistakeX);
+	mistakeY = AXIS_REDIRECT(METER_TO_CM(mistakeY));
+
+	*estimated = Position(position.x - mistakeX, position.y - mistakeY, position.o);
 
 	std::stringstream ss;
 	ss << "update_" << Particle::_updateId << "__obsticles.parti." << _myId << ".png";
