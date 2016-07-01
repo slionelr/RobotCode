@@ -99,12 +99,9 @@ bool Robot::MoveTo(Point dst) {
 		  (_position.y < (dst.y - MOVE_TOLERANCE)) ||
 		  (_position.y > (dst.y + MOVE_TOLERANCE))) {
 		Read();
-//		std::cout <<  "Current Position:[" << current.x << "," << current.y << "]" << std::endl;
 		std::cout <<  "Current Position:[" << _position.x << "," << _position.y << "]" << std::endl;
 	}
 	Stop();
-
-	std::cout << "Robot is Done Moving" << std::endl;
 
 	// Calculate deltas
 	dx = _position.x - pOld.x;
@@ -112,9 +109,16 @@ bool Robot::MoveTo(Point dst) {
 	dO = _position.o - pOld.o;
 
 	// Update particles
-	_mngLocation.Update(dx, dy, dO);
+	_mngLocation.Update(dx, dy, dO, _position);
 
-//	_position = _mngLocation.GetLocalizationPosition();
+	std::cout << "Robot is Done Moving to ";
+	_position.Print();
+	std::cout << std::endl;
+
+	Position toSet = _mngLocation.GetLocalizationPosition();
+	_position = toSet;
+//	SetOdometry(toSet); - bad thing: it calls some stuff that we dont whant to call
+	pp->SetOdometry(CM_TO_METER(toSet.x), AXIS_REDIRECT(CM_TO_METER(toSet.y)), toSet.o);
 
 	return true;
 }
@@ -132,9 +136,9 @@ bool Robot::RoteteTo(Point dst) {
 	while((GetEstPosition().o < minDegreeTolerance) || (GetEstPosition().o > maxDegreeTolerance)) {
 //		Read();
 //		std::cout <<  "Robot:" << GetEstPosition().o << std::endl;
-		Position c = GetEstPosition();
-		c.Print();
-		std::cout << std::endl;
+//		Position c = GetEstPosition();
+//		c.Print();
+//		std::cout << std::endl;
 	}
 	Stop();
 

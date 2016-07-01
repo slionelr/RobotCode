@@ -11,7 +11,7 @@
 #include "LocalizationManager.h"
 
 LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map) {
-	_particlesLength = 0;
+	_particlesCount = 0;
 	for (int i=0; i < MAX_PARTICLES; i++) {
 		_particles[i] = NULL;
 	}
@@ -69,18 +69,26 @@ void LocalizationManager::AddRandomParticle(Position p) {
 	AddParticle(new Particle(p.x + randDeltaX, p.y + randDeltaY, p.o + randDeltaO, _map));
 }
 
-void LocalizationManager::Update(double dx, double dy, double dO) {
+void LocalizationManager::Update(double dx, double dy, double dO, Position p) {
 	int index;
+	bool partiToDelete[MAX_PARTICLES];
+	bool bypassNewParti[MAX_PARTICLES];
+
+	for (index=0; index < MAX_PARTICLES; index++) {
+		partiToDelete[index] = false;
+		bypassNewParti[index] = false;
+	}
+
 	for (index=0; index < _lasersLen; index++) {
 		_lasersData[index] = _lp->GetRange(index);
 	}
 
+	double avgX = p.x;
+	double avgY = p.y;
+
 	double bestBelif = 0.0;
-	// The particles vector size before we add more - this probebly solves a problem
-	int partiVecSize = _particlesLength;
-	bool* partiDeleteParti = (bool*)malloc(partiVecSize * sizeof(bool));
-	for (index=0; index < partiVecSize; index++) {
-		if (_particles[index] == NULL) {
+	for (index=0; index < MAX_PARTICLES; index++) {
+		if (_particles[index] == NULL || bypassNewParti[index]) {
 			continue;
 		}
 
@@ -92,27 +100,34 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 
 		// Try to put new particles with correction to the mistake that was given above
 		double belif = _particles[index]->belif;
+
+		avgX = avgX + mistake.x * belif;
+		avgY = avgY + mistake.y * belif;
+
 		if ((belif > 0.6) || (Particle::_updateId < 1))
 		{
 //			double ryaw = rand() % 30 - 15.0;
 //			ryaw = DEGREE_2_RAD(ryaw);
 //			ryaw = ryaw / 2.0;
 
-			double ryaw = 1;
-			ryaw = DEGREE_2_RAD(ryaw);
+			double ryaw = 1.0;
+//			ryaw = DEGREE_2_RAD(ryaw);
+			ryaw = 0.0087;
 
-			int move = (4 - belif);
+//			int move = (3 - belif);
+
+			std::cout << "From particle #" << _particles[index]->_myId << " we create:" << std::endl;
 
 			Particle* up = new Particle(
 					_particles[index]->position.x,
-					_particles[index]->position.y - move,
+					_particles[index]->position.y - mistake.y,
 					mistake.o + ryaw, _map);
 			std::cout << "New particle at: ";
 			up->position.Print();
 			std::cout << std::endl;
 
 			Particle* right = new Particle(
-					_particles[index]->position.x + move,
+					_particles[index]->position.x + mistake.x,
 					_particles[index]->position.y,
 					mistake.o + ryaw, _map);
 			std::cout << "New particle at: ";
@@ -121,28 +136,32 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 
 			Particle* down = new Particle(
 					_particles[index]->position.x,
-					_particles[index]->position.y + move,
+					_particles[index]->position.y + mistake.y,
 					mistake.o - ryaw, _map);
 			std::cout << "New particle at: ";
 			down->position.Print();
 			std::cout << std::endl;
 
 			Particle* left = new Particle(
-					_particles[index]->position.x - move,
+					_particles[index]->position.x - mistake.x,
 					_particles[index]->position.y,
 					mistake.o - ryaw, _map);
 			std::cout << "New particle at: ";
 			left->position.Print();
 			std::cout << std::endl;
 
-			AddParticle(up);
-			AddParticle(right);
-			AddParticle(down);
-			AddParticle(left);
+			int indexToBypass = AddParticle(up);
+			if (indexToBypass == -1) { bypassNewParti[indexToBypass] = true; }
+			indexToBypass = AddParticle(right);
+			if (indexToBypass == -1) { bypassNewParti[indexToBypass] = true; }
+			indexToBypass = AddParticle(down);
+			if (indexToBypass == -1) { bypassNewParti[indexToBypass] = true; };
+			indexToBypass = AddParticle(left);
+			if (indexToBypass == -1) { bypassNewParti[indexToBypass] = true; }
 
-			partiDeleteParti[index] = false;
+			partiToDelete[index] = false;
 		} else {
-			partiDeleteParti[index] = true;
+			partiToDelete[index] = true;
 		}
 
 		// Check best particle
@@ -152,9 +171,15 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 		}
 	}
 
+	// Print the best particle
+	std::cout << "Best Particle #" << _particles[_bestIndex]->_myId;
+	_particles[_bestIndex]->position.Print();
+	std::cout << std::endl;
+
 	// Remove particles from end to start
+	index--;
 	for (; index >=0; index--) {
-		if (partiDeleteParti[index]) {
+		if (partiToDelete[index] && index !=_bestIndex) {
 			RemoveParticle(index);
 		}
 	}
@@ -162,24 +187,29 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 	Particle::_updateId++;
 }
 
-void LocalizationManager::AddParticle(Particle* p) {
-	if (_particlesLength < MAX_PARTICLES) {
-		for (int i=0; i < _particlesLength + 1; i++) {
-			if (_particles[i] == NULL) {
-				_particles[_particlesLength] = p;
-			}
+int LocalizationManager::AddParticle(Particle* p) {
+	if (_particlesCount >= MAX_PARTICLES) {
+		// Reached the limit number of particles
+		return -1;
+	}
+
+	for (int i=0; i < MAX_PARTICLES; i++) {
+		if (_particles[i] == NULL) {
+			_particles[i] = p;
+			_particlesCount++;
+//			break;
+			return i;
 		}
-		_particlesLength++;
 	}
 }
 
 void LocalizationManager::RemoveParticle(int index) {
 	// IF its the last particle keep it alive
-	if (_particlesLength == 0) {
+	if (_particlesCount == 0) {
 		return;
 	}
 	_particles[index] = NULL;
-	_particlesLength--;
+	_particlesCount--;
 }
 
 Map LocalizationManager::GetMap() {
@@ -188,7 +218,7 @@ Map LocalizationManager::GetMap() {
 
 std::vector<Position> LocalizationManager::GetParticlesPosition() {
 	std::vector<Position> v;
-	for (int i=0; i < _particlesLength; i++) {
+	for (int i=0; i < _particlesCount; i++) {
 		v.push_back(_particles[i]->position);
 	}
 	return v;

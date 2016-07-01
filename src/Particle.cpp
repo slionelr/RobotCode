@@ -195,8 +195,10 @@ double Particle::ProbByLaser(double* arrLaser, int lasersLen, Position* estimate
 //	mistakeX = mistakeX + newX;
 //	mistakeY = mistakeY + newY;
 
-	*estimated = Position(position.x + mistakeX, position.y + mistakeY, position.o);
+//	*estimated = Position(position.x + mistakeX, position.y + mistakeY, position.o);
 //	*estimated = Position(position.x - mistakeX, position.y - mistakeY, position.o);
+
+	*estimated = Position(mistakeX, mistakeY, position.o);
 
 	std::stringstream ss;
 	ss << "update_" << Particle::_updateId << "__obsticles.parti." << _myId << ".png";
