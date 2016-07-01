@@ -100,44 +100,37 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 
 			double ryaw = 1;
 			ryaw = DEGREE_2_RAD(ryaw);
-//
-//			Particle* a = new Particle(mistake.x, mistake.y, mistake.o - ryaw, _map);
-//			std::cout << "New particle at: ";
-//			a->position.Print();
-//			std::cout << std::endl;
-//
-//			Particle* b = new Particle(mistake.x, mistake.y, mistake.o - (ryaw * 2.0), _map);
-//			std::cout << "New particle at: ";
-//			b->position.Print();
-//			std::cout << std::endl;
-//
-//			Particle* c = new Particle(mistake.x, mistake.y, mistake.o - (ryaw * 3.0), _map);
-//			std::cout << "New particle at: ";
-//			c->position.Print();
-//			std::cout << std::endl;
-//
-//			AddParticle(a);
-//			AddParticle(b);
-//			AddParticle(c);
 
 			int move = (4 - belif);
 
-			Particle* up = new Particle(_particles[index]->position.x, _particles[index]->position.y - move, mistake.o + ryaw, _map);
+			Particle* up = new Particle(
+					_particles[index]->position.x,
+					_particles[index]->position.y - move,
+					mistake.o + ryaw, _map);
 			std::cout << "New particle at: ";
 			up->position.Print();
 			std::cout << std::endl;
 
-			Particle* right = new Particle(_particles[index]->position.x + move, _particles[index]->position.y, mistake.o + ryaw, _map);
+			Particle* right = new Particle(
+					_particles[index]->position.x + move,
+					_particles[index]->position.y,
+					mistake.o + ryaw, _map);
 			std::cout << "New particle at: ";
 			right->position.Print();
 			std::cout << std::endl;
 
-			Particle* down = new Particle(_particles[index]->position.x, _particles[index]->position.y + move, mistake.o - ryaw, _map);
+			Particle* down = new Particle(
+					_particles[index]->position.x,
+					_particles[index]->position.y + move,
+					mistake.o - ryaw, _map);
 			std::cout << "New particle at: ";
 			down->position.Print();
 			std::cout << std::endl;
 
-			Particle* left = new Particle(_particles[index]->position.x - move, _particles[index]->position.y, mistake.o - ryaw, _map);
+			Particle* left = new Particle(
+					_particles[index]->position.x - move,
+					_particles[index]->position.y,
+					mistake.o - ryaw, _map);
 			std::cout << "New particle at: ";
 			left->position.Print();
 			std::cout << std::endl;

@@ -9,6 +9,8 @@
 #define LOCALIZATIONMANAGER_H_
 
 #include <vector>
+
+#include "World.h"
 #include "Point.h"
 #include "Particle.h"
 

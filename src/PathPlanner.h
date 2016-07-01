@@ -10,6 +10,7 @@
 
 #include <iostream>
 
+#include "World.h"
 #include "MapUtils/Grid.h"
 #include "Point.h"
 

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <map>
 
+#include "World.h"
 #include "Position.h"
 
 class ConfigurationManager {

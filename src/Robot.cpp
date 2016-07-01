@@ -165,7 +165,8 @@ double Robot::FindDegreeToRotate(Point src, Point dst/*, double Yaw*/) {
 	int linearY;
 
 	linearX = dst.x - src.x;
-	linearY = -1 * (dst.y - src.y);
+	linearY = dst.y - src.y;
+	linearY = AXIS_REDIRECT(linearY);
 //	linearY = dst.y - src.y;
 //	yaw = Yaw;
 

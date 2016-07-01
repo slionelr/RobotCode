@@ -8,6 +8,8 @@
 #ifndef POINT_H_
 #define POINT_H_
 
+#include "World.h"
+
 class Point {
 public:
 	int x;

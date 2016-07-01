@@ -9,6 +9,8 @@
 #define PARTICLE_H_
 
 #include <libplayerc++/playerc++.h>
+
+#include "World.h"
 #include "Map.h"
 
 #define NORMAL 1.8

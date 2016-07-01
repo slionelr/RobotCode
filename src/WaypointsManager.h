@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 
+#include "World.h"
 //#include "MapUtils/Grid.h"
 //#include "PathPlanner.h"
 #include "Map.h"
