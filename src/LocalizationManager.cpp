@@ -84,17 +84,19 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 
 		Position mistake = _particles[index]->Update(_lasersData, _lasersLen, dx, dy, dO);
 
+		std::cout << "Particle #" << _particles[index]->_id << ": ";
+		_particles[index]->position.Print();
+		std::cout << " " << _particles[index]->belif << std::endl;
+
 		// Try to put new particles with correction to the mistake that was given above
-//		if (_particles[index]->belif > 0.5)
-//		{
-			// TODO: TEST LOOP - delete after finish testing
-			for (int k=2; k <= 2; k++){
+		double belif = _particles[index]->belif;
+		if ((belif > 0.4) || (Particle::_updateId < 1))
+		{
 //			double ryaw = rand() % 30 - 15.0;
 //			ryaw = DEGREE_2_RAD(ryaw);
 //			ryaw = ryaw / 2.0;
 
-			double ryaw = 2.0;
-			ryaw = k * ryaw;
+			double ryaw = 4.0;
 			ryaw = DEGREE_2_RAD(ryaw);
 
 			Particle* a = new Particle(mistake.x, mistake.y, mistake.o + ryaw, _map);
@@ -109,21 +111,17 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 
 			AddParticle(a);
 			AddParticle(b);
-			}
 
 			partiDeleteParti[index] = false;
-//		} else {
-//			partiDeleteParti[index] = true;
-//		}
+		} else {
+			partiDeleteParti[index] = true;
+		}
 
 		// Check best particle
 		if (bestBelif < _particles[index]->belif) {
 			_bestIndex = index;
 			bestBelif = _particles[index]->belif;
 		}
-		std::cout << "Particle #" << index << ": ";
-		_particles[index]->position.Print();
-		std::cout << " " << _particles[index]->belif << std::endl;
 	}
 
 	// Remove particles from end to start

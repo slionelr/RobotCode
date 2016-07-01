@@ -173,10 +173,16 @@ double Particle::ProbByLaser(double* arrLaser, int lasersLen, Position* estimate
 	double mistakeX = adm * cos(position.o);
 	double mistakeY = adm * sin(position.o);
 
+	// TODO: DETELE THIS TEST FOR REAL ROBOT
+//	mistakeX = mistakeX * 2.0;
+//	mistakeY = mistakeY * 2.0;
+	////////////////////////////////////////
+
 	mistakeX = METER_TO_CM(mistakeX);
 	mistakeY = AXIS_REDIRECT(METER_TO_CM(mistakeY));
 
-	*estimated = Position(position.x - mistakeX, position.y - mistakeY, position.o);
+	*estimated = Position(position.x + mistakeX, position.y + mistakeY, position.o);
+//	*estimated = Position(position.x - mistakeX, position.y - mistakeY, position.o);
 
 	std::stringstream ss;
 	ss << "update_" << Particle::_updateId << "__obsticles.parti." << _myId << ".png";

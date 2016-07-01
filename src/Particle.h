@@ -18,7 +18,6 @@
 
 class Particle {
 private:
-	static int _id; // TODO: DELETE ID
 	int _myId; // TODO: DELETE
 
 	Map _map;
@@ -26,6 +25,7 @@ private:
 	double ProbByMov(double dx, double dy, double dO);
 	double ProbByLaser(double* arrLaser, int lasersLen, Position* estimated);
 public:
+	static int _id; // TODO: DELETE ID
 	static int _updateId; // TODO: DELETE
 	double belif;
 	Position position;

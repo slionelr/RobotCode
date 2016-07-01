@@ -35,7 +35,10 @@ void Robot::SetOdometry(Position p) {
 void Robot::Read() {
 	pc->Read();
 	// DO NOT DELETE THIS LOOP - FOR GARBAGE VALUES AT START
-	while ((pp->GetXPos() == 0) && (pp->GetYPos() == 0) && (pp->GetYaw() == 0)) {
+//	while ((pp->GetXPos() == 0) && (pp->GetYPos() == 0) && (pp->GetYaw() == 0)) {
+//		pc->Read();
+//	}
+	for (int i=0; i<15; i++) {
 		pc->Read();
 	}
 
@@ -88,7 +91,11 @@ bool Robot::MoveTo(Point dst) {
 	std::cout << "Starting Moving To: " <<
 				 "[" << dst.x << "," << dst.y << "]" << std::endl;
 
+#ifdef REAL
+	SetSpeed(0.1,0);
+#else
 	SetSpeed(0.2,0);
+#endif
 	while((_position.x < (dst.x - MOVE_TOLERANCE)) ||
 		  (_position.x > (dst.x + MOVE_TOLERANCE)) ||
 		  (_position.y < (dst.y - MOVE_TOLERANCE)) ||
