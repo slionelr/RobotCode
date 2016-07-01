@@ -25,7 +25,7 @@ private:
 	Particle* _particles[MAX_PARTICLES];
 	int _particlesLength;
 	int _bestIndex;
-	Position AddRandomParticle(Position p);
+	void AddRandomParticle(Position p);
 	void AddParticle(Particle* p);
 	void RemoveParticle(int index);
 public:

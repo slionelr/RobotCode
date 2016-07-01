@@ -120,7 +120,8 @@ double Particle::ProbByLaser(double* arrLaser, int lasersLen, Position* estimate
 				if (value) {
 					mr_Counter++;
 				} else {
-					for (double ni=-1.0; ni < 1.0; ni=ni+0.1) {
+					double ni;
+					for (ni=-1.0; ni < 1.0; ni=ni+0.1) {
 						double rangeOobsDistance = obsDistance + ni;
 						if (rangeOobsDistance > 0.0) {
 							double nx = rangeOobsDistance * cos(mapAngle);
@@ -153,7 +154,11 @@ double Particle::ProbByLaser(double* arrLaser, int lasersLen, Position* estimate
 							}
 						}
 					}
-					misCounter++;
+					if (ni >= -1.0 && ni < 1.0) {
+						mr_Counter = mr_Counter + 0.5;
+					} else {
+						misCounter++;
+					}
 				}
 			}
 		}
@@ -174,12 +179,21 @@ double Particle::ProbByLaser(double* arrLaser, int lasersLen, Position* estimate
 	double mistakeY = adm * sin(position.o);
 
 	// TODO: DETELE THIS TEST FOR REAL ROBOT
-//	mistakeX = mistakeX * 2.0;
-//	mistakeY = mistakeY * 2.0;
+	mistakeX = mistakeX * 2.0;
+	mistakeY = mistakeY * 2.0;
 	////////////////////////////////////////
+
+	double retBelif = mr_Counter / (misCounter + mr_Counter);
 
 	mistakeX = METER_TO_CM(mistakeX);
 	mistakeY = AXIS_REDIRECT(METER_TO_CM(mistakeY));
+
+//	double newX = (1.0 - retBelif);
+//	double newY = (1.0 - retBelif);
+//	newX = newX * 1.5;
+//	newY = newY * 1.5;
+//	mistakeX = mistakeX + newX;
+//	mistakeY = mistakeY + newY;
 
 	*estimated = Position(position.x + mistakeX, position.y + mistakeY, position.o);
 //	*estimated = Position(position.x - mistakeX, position.y - mistakeY, position.o);
@@ -192,7 +206,7 @@ double Particle::ProbByLaser(double* arrLaser, int lasersLen, Position* estimate
 	if ((misCounter + mr_Counter) == 0) {
 		return 1.0;
 	} else {
-		return mr_Counter / (misCounter + mr_Counter);
+		return retBelif;
 	}
 }
 

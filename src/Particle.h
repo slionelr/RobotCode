@@ -18,14 +18,14 @@
 
 class Particle {
 private:
-	int _myId; // TODO: DELETE
+	static int _id; // TODO: DELETE ID
 
 	Map _map;
 	void init(double x, double y, double o, Map map);
 	double ProbByMov(double dx, double dy, double dO);
 	double ProbByLaser(double* arrLaser, int lasersLen, Position* estimated);
 public:
-	static int _id; // TODO: DELETE ID
+	int _myId; // TODO: DELETE
 	static int _updateId; // TODO: DELETE
 	double belif;
 	Position position;

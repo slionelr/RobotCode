@@ -24,7 +24,7 @@ int main() {
 	// Set the maps
 	Map map = Map(cnf.GetMap(), cnf.GetMapResolCM() / cnf.GetGridResolCM());
 	Map grid = map.MapGridConverter(cnf.GetGridResolCM() / cnf.GetMapResolCM());
-	Map nipuha = grid.Nipuha(3);
+	Map nipuha = grid.Nipuha(4);
 
 	// Get the grid locations
 	Position startGridLoc = nipuha.ConvertLocation(cnf.GetStartLocation());

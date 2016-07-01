@@ -25,15 +25,15 @@ LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int las
 void LocalizationManager::StartKnownPoint(Position start) {
 	// Add robot start position
 	AddParticle(new Particle(start.x, start.y, start.o, _map));
+	_bestIndex = 0;
 
-	// Add some random
+	// Add some random TODO: Its not good right now
 //	for (int i=0; i < FORK_COUNT; i++) {
-//		Position pr = AddRandomParticle(start);
-//		_particles.push_back(Particle(pr.x, pr.y, pr.o, _map));
+//		AddRandomParticle(start);
 //	}
 }
 
-Position LocalizationManager::AddRandomParticle(Position p) {
+void LocalizationManager::AddRandomParticle(Position p) {
 	// TODO: deltaRand - Maybe reasonable that this will be at least 4 because of the resolution between map and grid
 	const int deltaRand = 4;
 	int randDeltaX, randDeltaY;
@@ -61,10 +61,12 @@ Position LocalizationManager::AddRandomParticle(Position p) {
 		randDeltaO = randDeltaO * (-1.0);
 	}
 
-	Position ret = Position(p.x + randDeltaX,
-							p.y + randDeltaY,
-							p.o + randDeltaO);
-	return ret;
+//	Position ret = Position(p.x + randDeltaX,
+//							p.y + randDeltaY,
+//							p.o + randDeltaO);
+//	return ret;
+
+	AddParticle(new Particle(p.x + randDeltaX, p.y + randDeltaY, p.o + randDeltaO, _map));
 }
 
 void LocalizationManager::Update(double dx, double dy, double dO) {
@@ -84,33 +86,66 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 
 		Position mistake = _particles[index]->Update(_lasersData, _lasersLen, dx, dy, dO);
 
-		std::cout << "Particle #" << _particles[index]->_id << ": ";
+		std::cout << "Particle #" << _particles[index]->_myId << ": ";
 		_particles[index]->position.Print();
 		std::cout << " " << _particles[index]->belif << std::endl;
 
 		// Try to put new particles with correction to the mistake that was given above
 		double belif = _particles[index]->belif;
-		if ((belif > 0.4) || (Particle::_updateId < 1))
+		if ((belif > 0.6) || (Particle::_updateId < 1))
 		{
 //			double ryaw = rand() % 30 - 15.0;
 //			ryaw = DEGREE_2_RAD(ryaw);
 //			ryaw = ryaw / 2.0;
 
-			double ryaw = 4.0;
+			double ryaw = 1;
 			ryaw = DEGREE_2_RAD(ryaw);
+//
+//			Particle* a = new Particle(mistake.x, mistake.y, mistake.o - ryaw, _map);
+//			std::cout << "New particle at: ";
+//			a->position.Print();
+//			std::cout << std::endl;
+//
+//			Particle* b = new Particle(mistake.x, mistake.y, mistake.o - (ryaw * 2.0), _map);
+//			std::cout << "New particle at: ";
+//			b->position.Print();
+//			std::cout << std::endl;
+//
+//			Particle* c = new Particle(mistake.x, mistake.y, mistake.o - (ryaw * 3.0), _map);
+//			std::cout << "New particle at: ";
+//			c->position.Print();
+//			std::cout << std::endl;
+//
+//			AddParticle(a);
+//			AddParticle(b);
+//			AddParticle(c);
 
-			Particle* a = new Particle(mistake.x, mistake.y, mistake.o + ryaw, _map);
+			int move = (4 - belif);
+
+			Particle* up = new Particle(_particles[index]->position.x, _particles[index]->position.y - move, mistake.o + ryaw, _map);
 			std::cout << "New particle at: ";
-			a->position.Print();
+			up->position.Print();
 			std::cout << std::endl;
 
-			Particle* b = new Particle(mistake.x, mistake.y, mistake.o - ryaw, _map);
+			Particle* right = new Particle(_particles[index]->position.x + move, _particles[index]->position.y, mistake.o + ryaw, _map);
 			std::cout << "New particle at: ";
-			b->position.Print();
+			right->position.Print();
 			std::cout << std::endl;
 
-			AddParticle(a);
-			AddParticle(b);
+			Particle* down = new Particle(_particles[index]->position.x, _particles[index]->position.y + move, mistake.o - ryaw, _map);
+			std::cout << "New particle at: ";
+			down->position.Print();
+			std::cout << std::endl;
+
+			Particle* left = new Particle(_particles[index]->position.x - move, _particles[index]->position.y, mistake.o - ryaw, _map);
+			std::cout << "New particle at: ";
+			left->position.Print();
+			std::cout << std::endl;
+
+			AddParticle(up);
+			AddParticle(right);
+			AddParticle(down);
+			AddParticle(left);
 
 			partiDeleteParti[index] = false;
 		} else {

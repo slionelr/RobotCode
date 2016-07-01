@@ -35,10 +35,7 @@ void Robot::SetOdometry(Position p) {
 void Robot::Read() {
 	pc->Read();
 	// DO NOT DELETE THIS LOOP - FOR GARBAGE VALUES AT START
-//	while ((pp->GetXPos() == 0) && (pp->GetYPos() == 0) && (pp->GetYaw() == 0)) {
-//		pc->Read();
-//	}
-	for (int i=0; i<15; i++) {
+	while ((pp->GetXPos() == 0) && (pp->GetYPos() == 0) && (pp->GetYaw() == 0)) {
 		pc->Read();
 	}
 
@@ -75,6 +72,7 @@ Position Robot::GetPosition() {
 // TODO: Calculate it with SLAM/LocalizationManager
 Position Robot::GetEstPosition() {
 	return GetPosition();
+//	return _mngLocation.GetLocalizationPosition();
 }
 
 bool Robot::MoveTo(Point dst) {
@@ -82,7 +80,7 @@ bool Robot::MoveTo(Point dst) {
 	Position pOld = _position.Clone();
 
 	if (!RoteteTo(dst)) {
-		// TODO: Error message
+		// Error message
 		std::cout << "Couldn't rotate to the destination point: " <<
 					 "[X: " << dst.x << "] [Y: " << dst.y << "]" << std::endl;
 		return false;
@@ -115,6 +113,9 @@ bool Robot::MoveTo(Point dst) {
 
 	// Update particles
 	_mngLocation.Update(dx, dy, dO);
+
+//	_position = _mngLocation.GetLocalizationPosition();
+
 	return true;
 }
 
