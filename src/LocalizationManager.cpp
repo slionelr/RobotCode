@@ -10,6 +10,12 @@
 #include <cmath>
 #include "LocalizationManager.h"
 
+#ifdef REAL
+#define BELIF_TH 0.6
+#else
+#define BELIF_TH 0.5
+#endif
+
 LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int lasersLen, Map map) {
 	_particlesLength = 0;
 	for (int i=0; i < MAX_PARTICLES; i++) {
@@ -92,52 +98,52 @@ void LocalizationManager::Update(double dx, double dy, double dO) {
 
 		// Try to put new particles with correction to the mistake that was given above
 		double belif = _particles[index]->belif;
-		if ((belif > 0.6) || (Particle::_updateId < 1))
+		if ((belif > BELIF_TH) || (Particle::_updateId < 1))
 		{
 //			double ryaw = rand() % 30 - 15.0;
 //			ryaw = DEGREE_2_RAD(ryaw);
 //			ryaw = ryaw / 2.0;
 
-			double ryaw = 1;
-			ryaw = DEGREE_2_RAD(ryaw);
-//
-//			Particle* a = new Particle(mistake.x, mistake.y, mistake.o - ryaw, _map);
-//			std::cout << "New particle at: ";
-//			a->position.Print();
-//			std::cout << std::endl;
-//
-//			Particle* b = new Particle(mistake.x, mistake.y, mistake.o - (ryaw * 2.0), _map);
-//			std::cout << "New particle at: ";
-//			b->position.Print();
-//			std::cout << std::endl;
-//
-//			Particle* c = new Particle(mistake.x, mistake.y, mistake.o - (ryaw * 3.0), _map);
-//			std::cout << "New particle at: ";
-//			c->position.Print();
-//			std::cout << std::endl;
-//
-//			AddParticle(a);
-//			AddParticle(b);
-//			AddParticle(c);
+//			double ryaw = 3.0;
+//			ryaw = DEGREE_2_RAD(ryaw);
 
-			int move = (4 - belif);
+			int move = 2.0 * belif;
+			double oo = 0.036 * (belif / 2.0);
 
-			Particle* up = new Particle(_particles[index]->position.x, _particles[index]->position.y - move, mistake.o + ryaw, _map);
+			std::cout << "Child particles from #" << _particles[index]->_myId << std::endl;
+
+			Particle* up = new Particle(
+					_particles[index]->position.x,
+					_particles[index]->position.y - move,
+//					mistake.o - ryaw, _map);
+					mistake.o - oo, _map);
 			std::cout << "New particle at: ";
 			up->position.Print();
 			std::cout << std::endl;
 
-			Particle* right = new Particle(_particles[index]->position.x + move, _particles[index]->position.y, mistake.o + ryaw, _map);
+			Particle* right = new Particle(
+					_particles[index]->position.x + move,
+					_particles[index]->position.y,
+//					mistake.o - ryaw, _map);
+					mistake.o - oo, _map);
 			std::cout << "New particle at: ";
 			right->position.Print();
 			std::cout << std::endl;
 
-			Particle* down = new Particle(_particles[index]->position.x, _particles[index]->position.y + move, mistake.o - ryaw, _map);
+			Particle* down = new Particle(
+					_particles[index]->position.x,
+					_particles[index]->position.y + move,
+//					mistake.o + ryaw, _map);
+					mistake.o + oo, _map);
 			std::cout << "New particle at: ";
 			down->position.Print();
 			std::cout << std::endl;
 
-			Particle* left = new Particle(_particles[index]->position.x - move, _particles[index]->position.y, mistake.o - ryaw, _map);
+			Particle* left = new Particle(
+					_particles[index]->position.x - move,
+					_particles[index]->position.y,
+//					mistake.o + ryaw, _map);
+					mistake.o + oo, _map);
 			std::cout << "New particle at: ";
 			left->position.Print();
 			std::cout << std::endl;

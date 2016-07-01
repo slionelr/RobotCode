@@ -11,6 +11,7 @@
 #include <string>
 #include <libplayerc++/playerc++.h>
 
+#include "World.h"
 #include "ConfigurationManager.h"
 #include "Robot.h"
 #include "Map.h"

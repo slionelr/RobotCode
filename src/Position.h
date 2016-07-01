@@ -8,6 +8,7 @@
 #ifndef POSITION_H_
 #define POSITION_H_
 
+#include "World.h"
 #include "Point.h"
 
 #define DEGREE_2_RAD(d) (d * M_PI / 180)

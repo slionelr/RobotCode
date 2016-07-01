@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "MapUtils/Grid.h"
+#include "World.h"
 #include "Position.h"
 
 #include "MapUtils/RGB.h"

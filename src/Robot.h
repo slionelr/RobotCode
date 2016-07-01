@@ -8,12 +8,10 @@
 #ifndef ROBOT_H_
 #define ROBOT_H_
 
-// Sets if we are working on the real robot or in the simulation
-//#define REAL
-
 #include <iostream>
 #include <libplayerc++/playerc++.h>
 
+#include "World.h"
 #include "Position.h"
 #include "LocalizationManager.h"
 

@@ -99,8 +99,7 @@ bool Robot::MoveTo(Point dst) {
 		  (_position.y < (dst.y - MOVE_TOLERANCE)) ||
 		  (_position.y > (dst.y + MOVE_TOLERANCE))) {
 		Read();
-//		std::cout <<  "Current Position:[" << current.x << "," << current.y << "]" << std::endl;
-		std::cout <<  "Current Position:[" << _position.x << "," << _position.y << "]" << std::endl;
+//		std::cout <<  "Current Position:[" << _position.x << "," << _position.y << "]" << std::endl;
 	}
 	Stop();
 
@@ -132,9 +131,9 @@ bool Robot::RoteteTo(Point dst) {
 	while((GetEstPosition().o < minDegreeTolerance) || (GetEstPosition().o > maxDegreeTolerance)) {
 //		Read();
 //		std::cout <<  "Robot:" << GetEstPosition().o << std::endl;
-		Position c = GetEstPosition();
-		c.Print();
-		std::cout << std::endl;
+//		Position c = GetEstPosition();
+//		c.Print();
+//		std::cout << std::endl;
 	}
 	Stop();
 
