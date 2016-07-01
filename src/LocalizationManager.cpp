@@ -25,7 +25,10 @@ LocalizationManager::LocalizationManager(PlayerCc::LaserProxy* arrLaser, int las
 
 void LocalizationManager::StartKnownPoint(Position start) {
 	// Add robot start position
-	AddParticle(new Particle(start.x, start.y, start.o, _map));
+	Particle* startParti = new Particle(start.x, start.y, start.o, _map);
+	startParti->first = false;
+
+	AddParticle(startParti);
 	_bestIndex = 0;
 
 	// Add some random TODO: Its not good right now
@@ -123,7 +126,7 @@ void LocalizationManager::Update(double dx, double dy, double dO, Position p) {
 			Particle* up = new Particle(
 					_particles[index]->position.x,
 					_particles[index]->position.y - mistake.y,
-					mistake.o + ryaw, _map);
+					_particles[index]->position.o + mistake.o + ryaw, _map);
 			std::cout << "New particle at: ";
 			up->position.Print();
 			std::cout << std::endl;
@@ -131,7 +134,7 @@ void LocalizationManager::Update(double dx, double dy, double dO, Position p) {
 			Particle* right = new Particle(
 					_particles[index]->position.x + mistake.x,
 					_particles[index]->position.y,
-					mistake.o + ryaw, _map);
+					_particles[index]->position.o + mistake.o + ryaw, _map);
 			std::cout << "New particle at: ";
 			right->position.Print();
 			std::cout << std::endl;
@@ -139,7 +142,7 @@ void LocalizationManager::Update(double dx, double dy, double dO, Position p) {
 			Particle* down = new Particle(
 					_particles[index]->position.x,
 					_particles[index]->position.y + mistake.y,
-					mistake.o - ryaw, _map);
+					_particles[index]->position.o + mistake.o - ryaw, _map);
 			std::cout << "New particle at: ";
 			down->position.Print();
 			std::cout << std::endl;
@@ -147,7 +150,7 @@ void LocalizationManager::Update(double dx, double dy, double dO, Position p) {
 			Particle* left = new Particle(
 					_particles[index]->position.x - mistake.x,
 					_particles[index]->position.y,
-					mistake.o - ryaw, _map);
+					_particles[index]->position.o + mistake.o - ryaw, _map);
 			std::cout << "New particle at: ";
 			left->position.Print();
 			std::cout << std::endl;
