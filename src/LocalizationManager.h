@@ -24,11 +24,11 @@ private:
 	int _lasersLen;
 	Map _map;
 
-	Particle* _particles[MAX_PARTICLES];
-	int _particlesCount;
+	std::vector<Particle*> _particles;
+//	int _particlesCount;
 	int _bestIndex;
 	void AddRandomParticle(Position p);
-	int AddParticle(Particle* p);
+	void AddParticle(Particle* p);
 	void RemoveParticle(int index);
 public:
 	LocalizationManager() {}

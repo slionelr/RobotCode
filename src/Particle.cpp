@@ -22,6 +22,7 @@ Particle::Particle(double x, double y, double o, Map map) {
 }
 
 void Particle::init(double x, double y, double o, Map map) {
+	this->first = true;
 //	this->_updateId = 0;
 	this->_myId = _id;
 	++_id;
