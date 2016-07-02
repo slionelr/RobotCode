@@ -9,7 +9,7 @@
 #include "Robot.h"
 
 #define DEGREE_TOLERANCE 1
-#define MOVE_TOLERANCE 1
+#define MOVE_TOLERANCE 1.0
 
 // TODO: Check if the robot is going to get into the obstacle
 
@@ -132,9 +132,15 @@ bool Robot::MoveTo(Point dst) {
 //	_position = toSet;
 //	SetOdometry(toSet); - bad thing: it calls some stuff that we dont whant to call
 //	pp->SetOdometry(CM_TO_METER(toSet.x), AXIS_REDIRECT(CM_TO_METER(toSet.y)), toSet.o);
+
+	std::cout << "Before SLAM correction: ";
+	_position.Print();
+	std::cout << std::endl << "After SLAM correction: ";
 	offsetX = toSet.x - _position.x;
 	offsetY = toSet.y - _position.y;
 	offsetO = toSet.o - _position.o;
+	GetEstPosition().Print();
+	std::cout << std::endl;
 
 	return true;
 }
